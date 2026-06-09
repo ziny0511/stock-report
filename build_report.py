@@ -5,15 +5,22 @@ from dart_fetcher import fetch_all
 def fmt_date(rcept_dt):
     return f"{rcept_dt[4:6]}/{rcept_dt[6:]}"
 
+def dart_url(rcept_no):
+    return f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
+
 def disc_rows(items, badge_class, badge_text):
     if not items:
         return "<div class='empty'>해당 공시 없음</div>"
     rows = ""
     for d in items:
+        url = dart_url(d['rcept_no'])
         rows += f"""
         <div class="disc-row">
           <span class="pill {badge_class}">{badge_text}</span>
-          <span class="disc-name">{d['report_nm']}</span>
+          <a class="disc-name" href="{url}" target="_blank" rel="noopener">
+            {d['report_nm']}
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">{d['corp_name']}</span>
           <span class="disc-date">{fmt_date(d['rcept_dt'])}</span>
         </div>"""
@@ -53,10 +60,29 @@ def build():
   .sub-head {{ font-size: 13px; font-weight: 500; margin-bottom: 10px; }}
   .disc-row {{ display: grid;
                grid-template-columns: 68px minmax(0,1fr) 90px 44px;
-               gap: 6px; align-items: start; padding: 6px 0;
-               border-bottom: 0.5px solid #f0f0f0; font-size: 13px; }}
+               gap: 6px; align-items: center; padding: 7px 0;
+               border-bottom: 0.5px solid #f0f0f0; }}
   .disc-row:last-of-type {{ border-bottom: none; }}
-  .disc-name {{ color: #1a1a1a; line-height: 1.4; }}
+  a.disc-name {{
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }}
+  a.disc-name:hover {{ color: #185FA5; }}
+  a.disc-name:hover .link-icon {{ opacity: 1; }}
+  .link-icon {{
+    font-style: normal;
+    font-size: 11px;
+    color: #185FA5;
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }}
   .disc-corp {{ color: #888; text-align: right; font-size: 12px; }}
   .disc-date {{ color: #aaa; text-align: right; font-size: 12px; }}
   .pill {{ display: inline-block; font-size: 11px; padding: 2px 8px;
