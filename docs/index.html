@@ -22,10 +22,29 @@
   .sub-head { font-size: 13px; font-weight: 500; margin-bottom: 10px; }
   .disc-row { display: grid;
                grid-template-columns: 68px minmax(0,1fr) 90px 44px;
-               gap: 6px; align-items: start; padding: 6px 0;
-               border-bottom: 0.5px solid #f0f0f0; font-size: 13px; }
+               gap: 6px; align-items: center; padding: 7px 0;
+               border-bottom: 0.5px solid #f0f0f0; }
   .disc-row:last-of-type { border-bottom: none; }
-  .disc-name { color: #1a1a1a; line-height: 1.4; }
+  a.disc-name {
+    color: #1a1a1a;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s;
+  }
+  a.disc-name:hover { color: #185FA5; }
+  a.disc-name:hover .link-icon { opacity: 1; }
+  .link-icon {
+    font-style: normal;
+    font-size: 11px;
+    color: #185FA5;
+    opacity: 0;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
   .disc-corp { color: #888; text-align: right; font-size: 12px; }
   .disc-date { color: #aaa; text-align: right; font-size: 12px; }
   .pill { display: inline-block; font-size: 11px; padding: 2px 8px;
@@ -50,7 +69,7 @@
 
   <div class="report-header">
     <div class="report-title">국내주식 일일 리포트</div>
-    <div class="report-meta">2026년 06월 09일 05:11 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART 자동 수집</div>
+    <div class="report-meta">2026년 06월 09일 05:41 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART 자동 수집</div>
   </div>
 
   <div class="section">
@@ -61,37 +80,55 @@
         
         <div class="disc-row">
           <span class="pill pill-warn">희석위험</span>
-          <span class="disc-name">주요사항보고서(유상증자결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260609000131" target="_blank" rel="noopener">
+            주요사항보고서(유상증자결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">메타랩스</span>
           <span class="disc-date">06/09</span>
         </div>
         <div class="disc-row">
           <span class="pill pill-warn">희석위험</span>
-          <span class="disc-name">주요사항보고서(유상증자결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260609000135" target="_blank" rel="noopener">
+            주요사항보고서(유상증자결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">메타케어</span>
           <span class="disc-date">06/09</span>
         </div>
         <div class="disc-row">
           <span class="pill pill-warn">희석위험</span>
-          <span class="disc-name">[기재정정]주요사항보고서(전환사채권발행결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260608000447" target="_blank" rel="noopener">
+            [기재정정]주요사항보고서(전환사채권발행결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">블루산업개발</span>
           <span class="disc-date">06/08</span>
         </div>
         <div class="disc-row">
           <span class="pill pill-warn">희석위험</span>
-          <span class="disc-name">[기재정정]주요사항보고서(유상증자결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260609000169" target="_blank" rel="noopener">
+            [기재정정]주요사항보고서(유상증자결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">한국유니온제약</span>
           <span class="disc-date">06/09</span>
         </div>
         <div class="disc-row">
           <span class="pill pill-warn">희석위험</span>
-          <span class="disc-name">[기재정정]주요사항보고서(유상증자결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260609000166" target="_blank" rel="noopener">
+            [기재정정]주요사항보고서(유상증자결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">한국유니온제약</span>
           <span class="disc-date">06/09</span>
         </div>
         <div class="disc-row">
           <span class="pill pill-warn">희석위험</span>
-          <span class="disc-name">[기재정정]주요사항보고서(전환사채권발행결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260609000001" target="_blank" rel="noopener">
+            [기재정정]주요사항보고서(전환사채권발행결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">유니슨</span>
           <span class="disc-date">06/09</span>
         </div>
@@ -101,7 +138,10 @@
         
         <div class="disc-row">
           <span class="pill pill-safe">긍정공시</span>
-          <span class="disc-name">주요사항보고서(자기주식취득결정)</span>
+          <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260609000108" target="_blank" rel="noopener">
+            주요사항보고서(자기주식취득결정)
+            <i class="link-icon">↗</i>
+          </a>
           <span class="disc-corp">메디톡스</span>
           <span class="disc-date">06/09</span>
         </div>
