@@ -1,6 +1,8 @@
-import os
+import os, json
 from datetime import datetime
 from dart_fetcher import fetch_all
+from krx_fetcher import get_10day_price, get_corp_code_from_dart
+from config import DART_API_KEY
 
 def fmt_date(rcept_dt):
     return f"{rcept_dt[4:6]}/{rcept_dt[6:]}"
@@ -8,21 +10,88 @@ def fmt_date(rcept_dt):
 def dart_url(rcept_no):
     return f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
 
-def disc_rows(items, badge_class, badge_text):
+def make_chart_js(corp_name, prices, chart_id, color):
+    """종목별 미니 라인차트 JS 데이터"""
+    if not prices:
+        return f'<div class="no-chart">주가 데이터 없음</div>'
+
+    labels = json.dumps([p["date"] for p in prices], ensure_ascii=False)
+    values = json.dumps([p["close"] for p in prices])
+    changes = [p["change_pct"] for p in prices]
+    last_chg = changes[-1] if changes else 0
+    chg_color = "#3B6D11" if last_chg >= 0 else "#A32D2D"
+    chg_sign  = "+" if last_chg >= 0 else ""
+
+    return f"""
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <span class="chart-corp">{corp_name}</span>
+        <span class="chart-chg" style="color:{chg_color}">{chg_sign}{last_chg:.1f}% (전일)</span>
+      </div>
+      <canvas id="{chart_id}" height="80"></canvas>
+    </div>
+    <script>
+    (function() {{
+      var ctx = document.getElementById('{chart_id}').getContext('2d');
+      new Chart(ctx, {{
+        type: 'line',
+        data: {{
+          labels: {labels},
+          datasets: [{{
+            data: {values},
+            borderColor: '{color}',
+            borderWidth: 1.5,
+            pointRadius: 2,
+            pointBackgroundColor: '{color}',
+            fill: true,
+            backgroundColor: '{color}20',
+            tension: 0.3,
+          }}]
+        }},
+        options: {{
+          responsive: true,
+          plugins: {{ legend: {{ display: false }}, tooltip: {{
+            callbacks: {{
+              label: function(c) {{ return c.parsed.y.toLocaleString() + '원'; }}
+            }}
+          }}}},
+          scales: {{
+            x: {{ grid: {{ display: false }}, ticks: {{ font: {{ size: 10 }} }} }},
+            y: {{ grid: {{ color: '#f0f0f0' }}, ticks: {{
+              font: {{ size: 10 }},
+              callback: function(v) {{ return v.toLocaleString(); }}
+            }} }}
+          }}
+        }}
+      }});
+    }})();
+    </script>"""
+
+def disc_rows_with_chart(items, badge_class, badge_text, color):
     if not items:
         return "<div class='empty'>해당 공시 없음</div>"
+
     rows = ""
-    for d in items:
-        url = dart_url(d['rcept_no'])
+    for i, d in enumerate(items):
+        url      = dart_url(d['rcept_no'])
+        chart_id = f"chart_{badge_text}_{i}"
+
+        # DART 기업명 → 종목코드 → KRX 주가 조회
+        stock_code = get_corp_code_from_dart(d['corp_name'], DART_API_KEY)
+        prices     = get_10day_price(stock_code) if stock_code else []
+        chart_html = make_chart_js(d['corp_name'], prices, chart_id, color)
+
         rows += f"""
-        <div class="disc-row">
-          <span class="pill {badge_class}">{badge_text}</span>
-          <a class="disc-name" href="{url}" target="_blank" rel="noopener">
-            {d['report_nm']}
-            <i class="link-icon">↗</i>
-          </a>
-          <span class="disc-corp">{d['corp_name']}</span>
-          <span class="disc-date">{fmt_date(d['rcept_dt'])}</span>
+        <div class="disc-card">
+          <div class="disc-row">
+            <span class="pill {badge_class}">{badge_text}</span>
+            <a class="disc-name" href="{url}" target="_blank" rel="noopener">
+              {d['report_nm']} <i class="link-icon">↗</i>
+            </a>
+            <span class="disc-corp">{d['corp_name']}</span>
+            <span class="disc-date">{fmt_date(d['rcept_dt'])}</span>
+          </div>
+          {chart_html}
         </div>"""
     return rows
 
@@ -32,9 +101,9 @@ def build():
     time_str  = today.strftime("%H:%M")
 
     disc = fetch_all(days=1)
-    warn_html     = disc_rows(disc["warn"],     "pill-warn", "희석위험")
-    good_html     = disc_rows(disc["good"],     "pill-safe", "긍정공시")
-    earnings_html = disc_rows(disc["earnings"], "pill-info", "잠정실적")
+    warn_html     = disc_rows_with_chart(disc["warn"],     "pill-warn", "희석위험", "#E24B4A")
+    good_html     = disc_rows_with_chart(disc["good"],     "pill-safe", "긍정공시", "#639922")
+    earnings_html = disc_rows_with_chart(disc["earnings"], "pill-info", "잠정실적", "#185FA5")
 
     html = f"""<!DOCTYPE html>
 <html lang="ko">
@@ -42,49 +111,47 @@ def build():
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>국내주식 일일 리포트 — {today_str}</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   * {{ box-sizing: border-box; margin: 0; padding: 0; }}
   body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
           background: #f5f5f3; color: #1a1a1a; padding: 24px 16px; }}
-  .wrap {{ max-width: 900px; margin: 0 auto; }}
+  .wrap {{ max-width: 960px; margin: 0 auto; }}
   .report-header {{ margin-bottom: 24px; padding-bottom: 16px;
                     border-bottom: 0.5px solid #e0e0e0; }}
   .report-title {{ font-size: 20px; font-weight: 500; margin-bottom: 4px; }}
   .report-meta  {{ font-size: 13px; color: #888; }}
   .section {{ margin-bottom: 24px; }}
   .s-label {{ font-size: 11px; font-weight: 500; color: #888;
-              letter-spacing: 0.05em; text-transform: uppercase;
-              margin-bottom: 10px; }}
+              letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 10px; }}
   .card {{ background: #fff; border: 0.5px solid #e5e5e5;
            border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }}
-  .sub-head {{ font-size: 13px; font-weight: 500; margin-bottom: 10px; }}
+  .sub-head {{ font-size: 13px; font-weight: 500; margin-bottom: 12px; }}
+
+  /* 공시 카드 */
+  .disc-card {{ border-bottom: 0.5px solid #f0f0f0; padding: 10px 0; }}
+  .disc-card:last-child {{ border-bottom: none; }}
   .disc-row {{ display: grid;
                grid-template-columns: 68px minmax(0,1fr) 90px 44px;
-               gap: 6px; align-items: center; padding: 7px 0;
-               border-bottom: 0.5px solid #f0f0f0; }}
-  .disc-row:last-of-type {{ border-bottom: none; }}
-  a.disc-name {{
-    color: #1a1a1a;
-    text-decoration: none;
-    font-size: 13px;
-    line-height: 1.4;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    transition: color 0.15s;
-  }}
+               gap: 6px; align-items: center; margin-bottom: 8px; }}
+  a.disc-name {{ color: #1a1a1a; text-decoration: none; font-size: 13px;
+                 line-height: 1.4; display: flex; align-items: center; gap: 4px; }}
   a.disc-name:hover {{ color: #185FA5; }}
   a.disc-name:hover .link-icon {{ opacity: 1; }}
-  .link-icon {{
-    font-style: normal;
-    font-size: 11px;
-    color: #185FA5;
-    opacity: 0;
-    transition: opacity 0.15s;
-    flex-shrink: 0;
-  }}
+  .link-icon {{ font-style: normal; font-size: 11px; color: #185FA5;
+                opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }}
   .disc-corp {{ color: #888; text-align: right; font-size: 12px; }}
   .disc-date {{ color: #aaa; text-align: right; font-size: 12px; }}
+
+  /* 차트 */
+  .chart-wrap {{ background: #fafafa; border-radius: 8px;
+                 padding: 10px 12px; margin-top: 4px; }}
+  .chart-header {{ display: flex; justify-content: space-between;
+                   align-items: center; margin-bottom: 6px; }}
+  .chart-corp {{ font-size: 12px; font-weight: 500; color: #555; }}
+  .chart-chg  {{ font-size: 12px; font-weight: 500; }}
+  .no-chart {{ font-size: 12px; color: #bbb; padding: 8px 0; text-align: center; }}
+
   .pill {{ display: inline-block; font-size: 11px; padding: 2px 8px;
            border-radius: 99px; font-weight: 500; white-space: nowrap; }}
   .pill-warn {{ background: #FCEBEB; color: #791F1F; }}
@@ -95,23 +162,22 @@ def build():
   .footer {{ font-size: 11px; color: #ccc; text-align: center;
              margin-top: 40px; padding-top: 16px;
              border-top: 0.5px solid #e0e0e0; }}
-  @media (max-width: 600px) {{
+  @media (max-width: 640px) {{
     .two-col {{ grid-template-columns: 1fr; }}
-    .disc-row {{ grid-template-columns: 60px 1fr 70px; }}
-    .disc-date {{ display: none; }}
+    .disc-row {{ grid-template-columns: 60px 1fr; }}
+    .disc-corp, .disc-date {{ display: none; }}
   }}
 </style>
 </head>
 <body>
 <div class="wrap">
-
   <div class="report-header">
     <div class="report-title">국내주식 일일 리포트</div>
-    <div class="report-meta">{today_str} {time_str} 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART 자동 수집</div>
+    <div class="report-meta">{today_str} {time_str} 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
   </div>
 
   <div class="section">
-    <div class="s-label">④ 전일 주요 공시</div>
+    <div class="s-label">④ 전일 주요 공시 — 10영업일 주가 차트 포함</div>
     <div class="two-col">
       <div class="card">
         <div class="sub-head" style="color:#791F1F">⚠ 희석 위험 공시</div>
@@ -129,7 +195,7 @@ def build():
   </div>
 
   <div class="footer">
-    DART Open API 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report
+    DART + KRX 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report
   </div>
 </div>
 </body>
