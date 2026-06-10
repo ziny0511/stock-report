@@ -1,8 +1,9 @@
 import os, json
 from datetime import datetime
 from dart_fetcher import fetch_all
-from krx_fetcher import get_10day_price, get_corp_code_from_dart
+from krx_fetcher import get_10day_price, get_corp_code_from_name
 from config import DART_API_KEY
+import requests
 
 def fmt_date(rcept_dt):
     return f"{rcept_dt[4:6]}/{rcept_dt[6:]}"
@@ -10,25 +11,39 @@ def fmt_date(rcept_dt):
 def dart_url(rcept_no):
     return f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
 
-def make_chart_js(corp_name, prices, chart_id, color):
-    """종목별 미니 라인차트 JS 데이터"""
-    if not prices:
-        return f'<div class="no-chart">주가 데이터 없음</div>'
+def get_stock_code(corp_name, dart_api_key):
+    """DART API로 종목코드 조회"""
+    try:
+        url = "https://opendart.fss.or.kr/api/company.json"
+        params = {"crtfc_key": dart_api_key, "corp_name": corp_name}
+        res = requests.get(url, params=params, timeout=10)
+        items = res.json().get("list", [])
+        for item in items:
+            if item.get("corp_name") == corp_name and item.get("stock_code"):
+                return item["stock_code"].strip()
+    except Exception as e:
+        print(f"[DART] 종목코드 조회 실패 ({corp_name}): {e}")
+    return ""
 
-    labels = json.dumps([p["date"] for p in prices], ensure_ascii=False)
-    values = json.dumps([p["close"] for p in prices])
-    changes = [p["change_pct"] for p in prices]
-    last_chg = changes[-1] if changes else 0
-    chg_color = "#3B6D11" if last_chg >= 0 else "#A32D2D"
-    chg_sign  = "+" if last_chg >= 0 else ""
+def make_chart_html(corp_name, prices, chart_id, color):
+    if not prices:
+        return f'<div class="no-chart">주가 데이터를 가져올 수 없습니다</div>'
+
+    labels  = json.dumps([p["date"] for p in prices], ensure_ascii=False)
+    values  = json.dumps([p["close"] for p in prices])
+    last    = prices[-1]
+    chg     = last["change_pct"]
+    chg_color = "#3B6D11" if chg >= 0 else "#A32D2D"
+    chg_sign  = "+" if chg >= 0 else ""
+    close_fmt = f"{last['close']:,}"
 
     return f"""
     <div class="chart-wrap">
       <div class="chart-header">
-        <span class="chart-corp">{corp_name}</span>
-        <span class="chart-chg" style="color:{chg_color}">{chg_sign}{last_chg:.1f}% (전일)</span>
+        <span class="chart-corp">{corp_name} &nbsp;<span style="font-weight:400;color:#888">{close_fmt}원</span></span>
+        <span class="chart-chg" style="color:{chg_color}">{chg_sign}{chg:.1f}%</span>
       </div>
-      <canvas id="{chart_id}" height="80"></canvas>
+      <canvas id="{chart_id}" height="70"></canvas>
     </div>
     <script>
     (function() {{
@@ -41,24 +56,27 @@ def make_chart_js(corp_name, prices, chart_id, color):
             data: {values},
             borderColor: '{color}',
             borderWidth: 1.5,
-            pointRadius: 2,
+            pointRadius: 2.5,
             pointBackgroundColor: '{color}',
             fill: true,
-            backgroundColor: '{color}20',
+            backgroundColor: '{color}18',
             tension: 0.3,
           }}]
         }},
         options: {{
           responsive: true,
-          plugins: {{ legend: {{ display: false }}, tooltip: {{
-            callbacks: {{
-              label: function(c) {{ return c.parsed.y.toLocaleString() + '원'; }}
+          plugins: {{
+            legend: {{ display: false }},
+            tooltip: {{
+              callbacks: {{
+                label: function(c) {{ return c.parsed.y.toLocaleString() + '원'; }}
+              }}
             }}
-          }}}},
+          }},
           scales: {{
-            x: {{ grid: {{ display: false }}, ticks: {{ font: {{ size: 10 }} }} }},
-            y: {{ grid: {{ color: '#f0f0f0' }}, ticks: {{
-              font: {{ size: 10 }},
+            x: {{ grid: {{ display: false }}, ticks: {{ font: {{ size: 10 }}, color: '#aaa' }} }},
+            y: {{ grid: {{ color: '#f5f5f5' }}, ticks: {{
+              font: {{ size: 10 }}, color: '#aaa',
               callback: function(v) {{ return v.toLocaleString(); }}
             }} }}
           }}
@@ -70,17 +88,14 @@ def make_chart_js(corp_name, prices, chart_id, color):
 def disc_rows_with_chart(items, badge_class, badge_text, color):
     if not items:
         return "<div class='empty'>해당 공시 없음</div>"
-
     rows = ""
     for i, d in enumerate(items):
         url      = dart_url(d['rcept_no'])
-        chart_id = f"chart_{badge_text}_{i}"
-
-        # DART 기업명 → 종목코드 → KRX 주가 조회
-        stock_code = get_corp_code_from_dart(d['corp_name'], DART_API_KEY)
-        prices     = get_10day_price(stock_code) if stock_code else []
-        chart_html = make_chart_js(d['corp_name'], prices, chart_id, color)
-
+        chart_id = f"chart_{i}_{badge_text}"
+        code     = get_stock_code(d['corp_name'], DART_API_KEY)
+        prices   = get_10day_price(code) if code else []
+        print(f"  → {d['corp_name']} 종목코드:{code} 주가:{len(prices)}건")
+        chart_html = make_chart_html(d['corp_name'], prices, chart_id, color)
         rows += f"""
         <div class="disc-card">
           <div class="disc-row">
@@ -100,7 +115,7 @@ def build():
     today_str = today.strftime("%Y년 %m월 %d일")
     time_str  = today.strftime("%H:%M")
 
-    disc = fetch_all(days=1)
+    disc          = fetch_all(days=1)
     warn_html     = disc_rows_with_chart(disc["warn"],     "pill-warn", "희석위험", "#E24B4A")
     good_html     = disc_rows_with_chart(disc["good"],     "pill-safe", "긍정공시", "#639922")
     earnings_html = disc_rows_with_chart(disc["earnings"], "pill-info", "잠정실적", "#185FA5")
@@ -127,12 +142,9 @@ def build():
   .card {{ background: #fff; border: 0.5px solid #e5e5e5;
            border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }}
   .sub-head {{ font-size: 13px; font-weight: 500; margin-bottom: 12px; }}
-
-  /* 공시 카드 */
   .disc-card {{ border-bottom: 0.5px solid #f0f0f0; padding: 10px 0; }}
-  .disc-card:last-child {{ border-bottom: none; }}
-  .disc-row {{ display: grid;
-               grid-template-columns: 68px minmax(0,1fr) 90px 44px;
+  .disc-card:last-child {{ border-bottom: none; padding-bottom: 0; }}
+  .disc-row {{ display: grid; grid-template-columns: 68px minmax(0,1fr) 90px 44px;
                gap: 6px; align-items: center; margin-bottom: 8px; }}
   a.disc-name {{ color: #1a1a1a; text-decoration: none; font-size: 13px;
                  line-height: 1.4; display: flex; align-items: center; gap: 4px; }}
@@ -142,16 +154,13 @@ def build():
                 opacity: 0; transition: opacity 0.15s; flex-shrink: 0; }}
   .disc-corp {{ color: #888; text-align: right; font-size: 12px; }}
   .disc-date {{ color: #aaa; text-align: right; font-size: 12px; }}
-
-  /* 차트 */
-  .chart-wrap {{ background: #fafafa; border-radius: 8px;
-                 padding: 10px 12px; margin-top: 4px; }}
+  .chart-wrap {{ background: #fafafa; border-radius: 8px; padding: 10px 12px; }}
   .chart-header {{ display: flex; justify-content: space-between;
                    align-items: center; margin-bottom: 6px; }}
   .chart-corp {{ font-size: 12px; font-weight: 500; color: #555; }}
   .chart-chg  {{ font-size: 12px; font-weight: 500; }}
-  .no-chart {{ font-size: 12px; color: #bbb; padding: 8px 0; text-align: center; }}
-
+  .no-chart {{ font-size: 12px; color: #bbb; padding: 8px 0;
+               text-align: center; background: #fafafa; border-radius: 8px; }}
   .pill {{ display: inline-block; font-size: 11px; padding: 2px 8px;
            border-radius: 99px; font-weight: 500; white-space: nowrap; }}
   .pill-warn {{ background: #FCEBEB; color: #791F1F; }}
@@ -175,9 +184,8 @@ def build():
     <div class="report-title">국내주식 일일 리포트</div>
     <div class="report-meta">{today_str} {time_str} 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
   </div>
-
   <div class="section">
-    <div class="s-label">④ 전일 주요 공시 — 10영업일 주가 차트 포함</div>
+    <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
     <div class="two-col">
       <div class="card">
         <div class="sub-head" style="color:#791F1F">⚠ 희석 위험 공시</div>
@@ -193,9 +201,8 @@ def build():
       {earnings_html}
     </div>
   </div>
-
   <div class="footer">
-    DART + KRX 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report
+    DART + KRX(pykrx) 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report
   </div>
 </div>
 </body>
