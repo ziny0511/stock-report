@@ -1,7 +1,7 @@
 import os, json
 from datetime import datetime
 from dart_fetcher import fetch_all
-from krx_fetcher import get_10day_price, get_stock_code_from_dart
+from krx_fetcher import get_stock_code_from_name, get_10day_price
 from config import DART_API_KEY
 
 def fmt_date(rcept_dt):
@@ -12,7 +12,7 @@ def dart_url(rcept_no):
 
 def make_chart_html(corp_name, prices, chart_id, color):
     if not prices:
-        return f'<div class="no-chart">주가 데이터 없음</div>'
+        return '<div class="no-chart">주가 데이터 없음</div>'
 
     labels    = json.dumps([p["date"] for p in prices], ensure_ascii=False)
     values    = json.dumps([p["close"] for p in prices])
@@ -25,7 +25,9 @@ def make_chart_html(corp_name, prices, chart_id, color):
     return f"""
     <div class="chart-wrap">
       <div class="chart-header">
-        <span class="chart-corp">{corp_name} &nbsp;<span style="font-weight:400;color:#888">{close_fmt}원</span></span>
+        <span class="chart-corp">{corp_name}&nbsp;
+          <span style="font-weight:400;color:#888">{close_fmt}원</span>
+        </span>
         <span class="chart-chg" style="color:{chg_color}">{chg_sign}{chg:.1f}%</span>
       </div>
       <canvas id="{chart_id}" height="70"></canvas>
@@ -52,18 +54,17 @@ def make_chart_html(corp_name, prices, chart_id, color):
           responsive: true,
           plugins: {{
             legend: {{ display: false }},
-            tooltip: {{
-              callbacks: {{
-                label: function(c) {{ return c.parsed.y.toLocaleString() + '원'; }}
-              }}
-            }}
+            tooltip: {{ callbacks: {{
+              label: function(c) {{ return c.parsed.y.toLocaleString() + '원'; }}
+            }} }}
           }},
           scales: {{
-            x: {{ grid: {{ display: false }}, ticks: {{ font: {{ size: 10 }}, color: '#aaa' }} }},
-            y: {{ grid: {{ color: '#f5f5f5' }}, ticks: {{
-              font: {{ size: 10 }}, color: '#aaa',
-              callback: function(v) {{ return v.toLocaleString(); }}
-            }} }}
+            x: {{ grid: {{ display: false }},
+                  ticks: {{ font: {{ size: 10 }}, color: '#aaa' }} }},
+            y: {{ grid: {{ color: '#f5f5f5' }},
+                  ticks: {{ font: {{ size: 10 }}, color: '#aaa',
+                    callback: function(v) {{ return v.toLocaleString(); }}
+                  }} }}
           }}
         }}
       }});
@@ -77,9 +78,8 @@ def disc_rows_with_chart(items, badge_class, badge_text, color):
     for i, d in enumerate(items):
         url        = dart_url(d['rcept_no'])
         chart_id   = f"chart_{badge_text}_{i}"
-        code       = get_stock_code_from_dart(d['corp_name'], DART_API_KEY)
-        prices     = get_10day_price(code) if code else []
-        print(f"  → {d['corp_name']} 종목코드:{code} 주가:{len(prices)}건")
+        code       = get_stock_code_from_name(d['corp_name'])
+        prices     = get_10day_price(code, d['corp_name']) if code else []
         chart_html = make_chart_html(d['corp_name'], prices, chart_id, color)
         rows += f"""
         <div class="disc-card">
@@ -167,7 +167,7 @@ def build():
 <div class="wrap">
   <div class="report-header">
     <div class="report-title">국내주식 일일 리포트</div>
-    <div class="report-meta">{today_str} {time_str} 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + 네이버금융 자동 수집</div>
+    <div class="report-meta">{today_str} {time_str} 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
   </div>
   <div class="section">
     <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
@@ -187,7 +187,7 @@ def build():
     </div>
   </div>
   <div class="footer">
-    DART + 네이버금융 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report
+    DART + KRX Open API 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report
   </div>
 </div>
 </body>
