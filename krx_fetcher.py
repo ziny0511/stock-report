@@ -20,17 +20,17 @@ def _get(endpoint, base_date):
     try:
         res = requests.get(url, headers=headers, params={"basDd": base_date}, timeout=20)
         if res.status_code != 200:
-            print(f"  [KRX] HTTP {res.status_code} ({endpoint} {base_date}): {res.text[:200]}")
+            print(f"  [KRX] HTTP {res.status_code} ({endpoint} {base_date})")
             return []
-        data  = res.json()
-        items = data.get("OutBlock_1", [])
-        # 첫 번째 항목 키/값 샘플 출력 (디버그)
-        if items and endpoint.endswith("_trd"):
-            sample = items[0]
-            print(f"  [KRX DEBUG] {base_date} 첫번째 항목: {dict(list(sample.items())[:6])}")
+        items = res.json().get("OutBlock_1", [])
+        # 첫 번째 항목 전체 키 출력 (1회만)
+        if items and not hasattr(_get, '_printed'):
+            print(f"  [KRX DEBUG] 전체 키: {list(items[0].keys())}")
+            print(f"  [KRX DEBUG] 샘플값: {dict(list(items[0].items())[:8])}")
+            _get._printed = True
         return items
     except Exception as e:
-        print(f"  [KRX] 오류 ({endpoint} {base_date}): {e}")
+        print(f"  [KRX] 오류: {e}")
         return []
 
 def _last_biz_dates(n=15):
@@ -51,9 +51,12 @@ def get_stock_code_from_name(corp_name):
         for market in ["KOSPI", "KOSDAQ"]:
             items = _get(ENDPOINTS[market]["info"], base_date)
             for item in items:
-                name = item.get("ISU_ABBRV", "").strip()
-                code = item.get("ISU_SRT_CD", "").strip()
-                if name == corp_name and code:
+                # ISU_ABBRV(약명) 또는 ISU_NM(정식명) 으로 매칭
+                name1 = item.get("ISU_ABBRV", "").strip()
+                name2 = item.get("ISU_NM", "").strip()
+                # 단축코드(ISU_SRT_CD) 없으면 ISU_CD 앞 6자리 사용
+                code  = (item.get("ISU_SRT_CD") or item.get("ISU_CD", "")[:6]).strip()
+                if (name1 == corp_name or name2 == corp_name) and code:
                     print(f"  [KRX] {corp_name} → {code} ({market})")
                     return code, market
         if items:
@@ -70,12 +73,9 @@ def get_10day_price(stock_code, market, corp_name=""):
 
     for base_date in biz_dates:
         items = _get(ENDPOINTS[market]["daily"], base_date)
-        matched = False
         for item in items:
-            code = item.get("ISU_SRT_CD", "").strip()
-            # 첫 번째 종목의 코드 출력 (디버그)
-            if not matched and items:
-                print(f"  [KRX DEBUG] {base_date} 종목코드 샘플: {items[0].get('ISU_SRT_CD','?')} (찾는코드:{stock_code})")
+            # 일별매매정보의 종목코드 필드: ISU_SRT_CD 또는 ISU_CD 앞 6자리
+            code = (item.get("ISU_SRT_CD") or item.get("ISU_CD", "")[:6]).strip()
             if code == stock_code:
                 try:
                     close   = int(item.get("TDD_CLSPRC", "0").replace(",", ""))
@@ -86,9 +86,8 @@ def get_10day_price(stock_code, market, corp_name=""):
                             "close":      close,
                             "change_pct": chg_pct,
                         })
-                        matched = True
                 except Exception as e:
-                    print(f"  [KRX] 파싱 오류: {e} / {item}")
+                    print(f"  [KRX] 파싱 오류: {e}")
                 break
         if len(result) >= 10:
             break
