@@ -78,8 +78,8 @@ def disc_rows_with_chart(items, badge_class, badge_text, color):
     for i, d in enumerate(items):
         url        = dart_url(d['rcept_no'])
         chart_id   = f"chart_{badge_text}_{i}"
-        code       = get_stock_code_from_name(d['corp_name'])
-        prices     = get_10day_price(code, d['corp_name']) if code else []
+        code, market = get_stock_code_from_name(d['corp_name'])
+        prices     = get_10day_price(code, market, d['corp_name']) if code else []
         chart_html = make_chart_html(d['corp_name'], prices, chart_id, color)
         rows += f"""
         <div class="disc-card">
