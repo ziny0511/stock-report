@@ -30,7 +30,6 @@ def _get(endpoint, base_date):
         return []
 
 def _last_biz_dates(n=20):
-    """최근 n 영업일 날짜 리스트 (최신순)"""
     dates, dt = [], datetime.today() - timedelta(days=1)
     while len(dates) < n:
         if dt.weekday() < 5:
@@ -60,18 +59,7 @@ def _parse_volume(item):
         return 0
 
 def get_market_data(n_days=20):
-    """
-    최근 n_days 영업일의 전 종목 시세 수집
-    반환: {
-        stock_code: {
-            "name": str,
-            "market": str,
-            "prices": [{"date":..,"close":..,"chg_pct":..,"volume":..}, ...]  # 날짜 오름차순
-        }
-    }
-    """
     biz_dates = _last_biz_dates(n_days)
-    # stock_code → {name, market, prices}
     stocks = {}
 
     for date in biz_dates:
@@ -94,7 +82,6 @@ def get_market_data(n_days=20):
                     "volume":  volume,
                 })
 
-    # 날짜 오름차순 정렬
     for code in stocks:
         stocks[code]["prices"].sort(key=lambda x: x["date"])
 
@@ -103,10 +90,6 @@ def get_market_data(n_days=20):
 
 
 def find_consecutive_surge(stocks, min_days=3, min_pct=10.0):
-    """
-    3영업일 이상 연속으로 10% 이상 상승한 종목 탐색
-    반환: [{"code","name","market","streaks":[{"start","end","days","pcts",[]}], "last_volume"}]
-    """
     result = []
     for code, info in stocks.items():
         prices  = info["prices"]
@@ -118,39 +101,37 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0):
                 while j < len(prices) and prices[j]["chg_pct"] >= min_pct:
                     j += 1
                 if j - i >= min_days:
-                    streak_prices = prices[i:j]
+                    sp = prices[i:j]
                     streaks.append({
-                        "start": streak_prices[0]["date"],
-                        "end":   streak_prices[-1]["date"],
-                        "days":  j - i,
-                        "pcts":  [p["chg_pct"] for p in streak_prices],
-                        "closes":[p["close"]   for p in streak_prices],
-                        "dates": [p["date"]    for p in streak_prices],
+                        "start":  sp[0]["date"],
+                        "end":    sp[-1]["date"],
+                        "days":   j - i,
+                        "pcts":   [p["chg_pct"] for p in sp],
+                        "closes": [p["close"]   for p in sp],
+                        "dates":  [p["date"]    for p in sp],
                     })
                 i = j
             else:
                 i += 1
 
         if streaks:
-            last_volume = prices[-1]["volume"] if prices else 0
+            last_price  = prices[-1]
             result.append({
                 "code":        code,
                 "name":        info["name"],
                 "market":      info["market"],
                 "streaks":     streaks,
-                "last_volume": last_volume,
+                "last_volume": last_price["volume"],
+                "last_close":  last_price["close"],   # ← 전일 종가 추가
+                "last_chg":    last_price["chg_pct"], # ← 전일 등락률 추가
             })
 
-    # 전일 거래대금 내림차순
     result.sort(key=lambda x: x["last_volume"], reverse=True)
     print(f"[분석] 연속 상승 종목 {len(result)}개 발견")
     return result
 
 
 def find_consecutive_decline(stocks, min_days=5):
-    """
-    5영업일 이상 연속 하락 종목 탐색
-    """
     result = []
     for code, info in stocks.items():
         prices  = info["prices"]
@@ -162,27 +143,29 @@ def find_consecutive_decline(stocks, min_days=5):
                 while j < len(prices) and prices[j]["chg_pct"] < 0:
                     j += 1
                 if j - i >= min_days:
-                    streak_prices = prices[i:j]
+                    sp = prices[i:j]
                     streaks.append({
-                        "start":  streak_prices[0]["date"],
-                        "end":    streak_prices[-1]["date"],
+                        "start":  sp[0]["date"],
+                        "end":    sp[-1]["date"],
                         "days":   j - i,
-                        "pcts":   [p["chg_pct"] for p in streak_prices],
-                        "closes": [p["close"]   for p in streak_prices],
-                        "dates":  [p["date"]    for p in streak_prices],
+                        "pcts":   [p["chg_pct"] for p in sp],
+                        "closes": [p["close"]   for p in sp],
+                        "dates":  [p["date"]    for p in sp],
                     })
                 i = j
             else:
                 i += 1
 
         if streaks:
-            last_volume = prices[-1]["volume"] if prices else 0
+            last_price  = prices[-1]
             result.append({
                 "code":        code,
                 "name":        info["name"],
                 "market":      info["market"],
                 "streaks":     streaks,
-                "last_volume": last_volume,
+                "last_volume": last_price["volume"],
+                "last_close":  last_price["close"],   # ← 전일 종가 추가
+                "last_chg":    last_price["chg_pct"], # ← 전일 등락률 추가
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)
@@ -191,15 +174,11 @@ def find_consecutive_decline(stocks, min_days=5):
 
 
 def get_top10_fluctuation(stocks):
-    """
-    전일 기준 상승/하락 TOP10
-    """
     yesterday = _last_biz_dates(1)[0]
     day_data  = []
 
     for code, info in stocks.items():
-        prices = info["prices"]
-        for p in prices:
+        for p in info["prices"]:
             if p["date"] == yesterday:
                 day_data.append({
                     "code":    code,
