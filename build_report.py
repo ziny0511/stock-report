@@ -59,7 +59,8 @@ def col_surge(surge_list):
         return "<div class='empty'>해당 종목 없음</div>"
     html = ""
     for s in surge_list[:8]:
-        last_close = s["streaks"][-1]["closes"][-1] if s["streaks"] else 0
+        last_close = s.get("last_close", 0)
+        last_chg   = s.get("last_chg", 0)
         pills = " ".join([f'<span class="pill pill-up">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
         streaks_html = ""
@@ -83,6 +84,7 @@ def col_surge(surge_list):
           <div class="stock-row">
             <span class="stock-vol">거래대금 {vol_fmt(s['last_volume'])}</span>
             <span class="stock-price">{last_close:,}원</span>
+            <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
           </div>
           <div class="streak-wrap">{streaks_html}</div>
         </div>"""
@@ -94,7 +96,8 @@ def col_decline(decline_list):
         return "<div class='empty'>해당 종목 없음</div>"
     html = ""
     for s in decline_list[:8]:
-        last_close = s["streaks"][-1]["closes"][-1] if s["streaks"] else 0
+        last_close = s.get("last_close", 0)
+        last_chg   = s.get("last_chg", 0)
         pills = " ".join([f'<span class="pill pill-down">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
         streaks_html = ""
@@ -118,6 +121,7 @@ def col_decline(decline_list):
           <div class="stock-row">
             <span class="stock-vol">거래대금 {vol_fmt(s['last_volume'])}</span>
             <span class="stock-price">{last_close:,}원</span>
+            <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
           </div>
           <div class="streak-wrap">{streaks_html}</div>
         </div>"""
