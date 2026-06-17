@@ -5,11 +5,23 @@ from krx_fetcher import get_stock_code_from_name, get_10day_price
 from krx_market  import get_market_data, find_consecutive_surge, find_consecutive_decline, get_top10_fluctuation
 from config import DART_API_KEY
 
+WEEKDAY_KR = ["월", "화", "수", "목", "금", "토", "일"]
+
 def fmt_date(rcept_dt):
     return f"{rcept_dt[4:6]}/{rcept_dt[6:]}"
 
 def fmt_krx(d):
-    return f"{d[4:6]}/{d[6:]}"
+    """20260616 → 06/16(월)"""
+    from datetime import datetime
+    try:
+        dt  = datetime.strptime(d, "%Y%m%d")
+        day = WEEKDAY_KR[dt.weekday()]
+        return f"{d[4:6]}/{d[6:]}({day})"
+    except:
+        return f"{d[4:6]}/{d[6:]}"
+
+def naver_stock_url(code):
+    return f"https://finance.naver.com/item/main.naver?code={code}"
 
 def dart_url(rcept_no):
     return f"https://dart.fss.or.kr/dsaf001/main.do?rcpNo={rcept_no}"
@@ -78,7 +90,11 @@ def col_surge(surge_list):
         html += f"""
         <div class="stock-item">
           <div class="stock-row">
-            <div><span class="stock-name">{s['name']}</span><span class="stock-code">{s['code']}</span></div>
+            <div>
+              <a class="stock-link" href="{naver_stock_url(s['code'])}" target="_blank" rel="noopener">
+                <span class="stock-name">{s['name']}</span><span class="stock-code">{s['code']}</span>
+              </a>
+            </div>
             <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">{pills}</div>
           </div>
           <div class="stock-row">
@@ -115,7 +131,11 @@ def col_decline(decline_list):
         html += f"""
         <div class="stock-item">
           <div class="stock-row">
-            <div><span class="stock-name">{s['name']}</span><span class="stock-code">{s['code']}</span></div>
+            <div>
+              <a class="stock-link" href="{naver_stock_url(s['code'])}" target="_blank" rel="noopener">
+                <span class="stock-name">{s['name']}</span><span class="stock-code">{s['code']}</span>
+              </a>
+            </div>
             <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">{pills}</div>
           </div>
           <div class="stock-row">
@@ -135,7 +155,7 @@ def col_top10(top_up, top_down):
             sign = "+" if d["chg_pct"] > 0 else ""
             h += f"""<div class="t-row">
               <span class="t-rank">{i+1}</span>
-              <span class="t-name">{d['name']}</span>
+              <a class="stock-link t-name" href="{naver_stock_url(d['code'])}" target="_blank" rel="noopener">{d['name']}</a>
               <span class="{pct_class}">{sign}{d['chg_pct']:.1f}%</span>
               <span class="t-price">{d['close']:,}원</span>
             </div>"""
@@ -231,6 +251,9 @@ def build():
   .stock-row{{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}}
   .stock-name{{font-size:12px;font-weight:500;color:#1a1a1a;}}
   .stock-code{{font-size:10px;color:#aaa;margin-left:3px;}}
+  .stock-link{{text-decoration:none;color:inherit;}}
+  .stock-link:hover .stock-name{{color:#185FA5;text-decoration:underline;}}
+  .stock-link:hover{{color:#185FA5;}}
   .stock-price{{font-size:11px;font-weight:500;color:#1a1a1a;}}
   .stock-vol{{font-size:10px;color:#888;}}
   .streak-wrap{{margin-top:4px;}}
@@ -243,7 +266,7 @@ def build():
   .gap-line{{flex:1;border-top:0.5px dashed #e0e0e0;}}
   .gap-text{{font-size:9px;color:#aaa;white-space:nowrap;}}
   .day-row{{display:flex;align-items:center;gap:4px;padding:1px 0;font-size:10px;}}
-  .day-label{{color:#888;min-width:34px;}}
+  .day-label{{color:#888;min-width:58px;}}
   .pct-up{{color:#3B6D11;font-weight:500;min-width:40px;}}
   .pct-down{{color:#A32D2D;font-weight:500;min-width:40px;}}
   .dprice{{font-size:10px;color:#aaa;}}
