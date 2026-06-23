@@ -1,12 +1,17 @@
 import requests
 import os
+import json
 from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 KRX_API_KEY = os.environ.get("KRX_API_KEY", "")
 API_BASE    = "https://data-dbg.krx.co.kr/svc/apis/sto"
 
 WINDOW_DAYS = {"1m": 22, "2m": 44, "6m": 130, "12m": 260}
 WINDOW_LABELS = {"1m": "1개월", "2m": "2개월", "6m": "6개월", "12m": "12개월"}
+
+CACHE_PATH = "docs/data/raw"  # 날짜별 원시 데이터 캐시 폴더
+MAX_WORKERS = 8               # 병렬 API 호출 수
 
 ENDPOINTS = {
     "KOSPI":  { "daily": "/stk_bydd_trd", "info": "/stk_isu_base_info" },
@@ -32,7 +37,7 @@ def _get(endpoint, base_date):
     except:
         return []
 
-def _last_biz_dates(n=20):
+def _last_biz_dates(n=260):
     dates, dt = [], datetime.today() - timedelta(days=1)
     while len(dates) < n:
         if dt.weekday() < 5:
@@ -61,42 +66,94 @@ def _parse_volume(item):
     except:
         return 0
 
+# ── 캐시 로드/저장 ──────────────────────────────────────────
+def _cache_file(date):
+    return os.path.join(CACHE_PATH, f"{date}.json")
+
+def _load_cache(date):
+    path = _cache_file(date)
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            pass
+    return None
+
+def _save_cache(date, data):
+    os.makedirs(CACHE_PATH, exist_ok=True)
+    with open(_cache_file(date), "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False)
+
+# ── 하루치 데이터 fetch (캐시 우선) ─────────────────────────
+def _fetch_day(date):
+    cached = _load_cache(date)
+    if cached is not None:
+        return date, cached
+
+    day_stocks = {}
+    for market in ["KOSPI", "KOSDAQ"]:
+        items = _get(ENDPOINTS[market]["daily"], date)
+        for item in items:
+            code   = _parse_code(item)
+            name   = item.get("ISU_ABBRV", item.get("ISU_NM", code)).strip()
+            close  = _parse_close(item)
+            chg    = _parse_chg(item)
+            volume = _parse_volume(item)
+            if not code or close <= 0:
+                continue
+            day_stocks[code] = {
+                "name":    name,
+                "market":  market,
+                "close":   close,
+                "chg_pct": chg,
+                "volume":  volume,
+            }
+
+    if day_stocks:
+        _save_cache(date, day_stocks)
+    return date, day_stocks
+
+# ── 메인 수집 함수 (병렬 + 캐시) ────────────────────────────
 def get_market_data(n_days=260):
     biz_dates = _last_biz_dates(n_days)
+    today_str = biz_dates[0]  # 가장 최근 날짜 = 캐시 저장 안 함(당일만 제외)
+
+    cached_count = sum(1 for d in biz_dates if os.path.exists(_cache_file(d)))
+    fetch_count  = len(biz_dates) - cached_count
+    print(f"[KRX] 캐시 {cached_count}일 / API 호출 {fetch_count}일 (병렬 {MAX_WORKERS}workers)")
+
+    results = {}
+    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as ex:
+        futures = {ex.submit(_fetch_day, d): d for d in biz_dates}
+        done = 0
+        for fut in as_completed(futures):
+            date, day_data = fut.result()
+            results[date] = day_data
+            done += 1
+            if done % 20 == 0:
+                print(f"  ... {done}/{len(biz_dates)} 완료")
+
+    # stocks 딕셔너리 조립
     stocks = {}
-
-    for date in biz_dates:
-        for market in ["KOSPI", "KOSDAQ"]:
-            items = _get(ENDPOINTS[market]["daily"], date)
-            for item in items:
-                code   = _parse_code(item)
-                name   = item.get("ISU_ABBRV", item.get("ISU_NM", code)).strip()
-                close  = _parse_close(item)
-                chg    = _parse_chg(item)
-                volume = _parse_volume(item)
-                if not code or close <= 0:
-                    continue
-                if code not in stocks:
-                    stocks[code] = {"name": name, "market": market, "prices": []}
-                stocks[code]["prices"].append({
-                    "date":    date,
-                    "close":   close,
-                    "chg_pct": chg,
-                    "volume":  volume,
-                })
-
-    for code in stocks:
-        stocks[code]["prices"].sort(key=lambda x: x["date"])
+    for date in sorted(results.keys()):
+        for code, info in results[date].items():
+            if code not in stocks:
+                stocks[code] = {"name": info["name"], "market": info["market"], "prices": []}
+            stocks[code]["prices"].append({
+                "date":    date,
+                "close":   info["close"],
+                "chg_pct": info["chg_pct"],
+                "volume":  info["volume"],
+            })
 
     print(f"[KRX] 전체 종목 {len(stocks)}개 / {n_days}영업일 수집 완료")
     return stocks
 
 
 def _calc_extra(prices):
-    """거래량 배수(5일평균 대비), 5일 누적 등락률, 52주 신고가 여부 계산"""
     last = prices[-1]
 
-    # 거래량 배수: 최근 20일(오늘 제외) 평균 대비
     recent_vols = [p["volume"] for p in prices[:-1] if p["volume"] > 0]
     if len(recent_vols) >= 5:
         avg_vol = sum(recent_vols[-20:]) / len(recent_vols[-20:])
@@ -104,14 +161,12 @@ def _calc_extra(prices):
     else:
         vol_ratio = 0.0
 
-    # 5일 누적 등락률: 최근 5일 종가 기준 (첫날 대비 마지막날)
     if len(prices) >= 5:
         base_close = prices[-5]["close"]
         cum_pct = round((last["close"] - base_close) / base_close * 100, 1) if base_close > 0 else 0.0
     else:
         cum_pct = 0.0
 
-    # 52주 신고가: 수집 데이터(최대 20일) 내 최고가 대비 — 데이터 한계상 "수집기간 신고가"로 표시
     highs = [p["close"] for p in prices]
     is_52w_high = last["close"] >= max(highs) if highs else False
     high_pct = round((last["close"] - max(highs[:-1])) / max(highs[:-1]) * 100, 1) if len(highs) > 1 else 0.0
@@ -155,10 +210,10 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
                 "last_volume": last_price["volume"],
                 "last_close":  last_price["close"],
                 "last_chg":    last_price["chg_pct"],
-                "vol_ratio":   vol_ratio,   # 거래량 배수
-                "cum_pct":     cum_pct,     # 5일 누적 등락률
-                "is_52w_high": is_52w_high, # 신고가 여부
-                "high_pct":    high_pct,    # 전고점 대비 %
+                "vol_ratio":   vol_ratio,
+                "cum_pct":     cum_pct,
+                "is_52w_high": is_52w_high,
+                "high_pct":    high_pct,
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)
@@ -202,10 +257,10 @@ def find_consecutive_decline(stocks, min_days=5, window_days=22):
                 "last_volume": last_price["volume"],
                 "last_close":  last_price["close"],
                 "last_chg":    last_price["chg_pct"],
-                "vol_ratio":   vol_ratio,   # 거래량 배수
-                "cum_pct":     cum_pct,     # 5일 누적 등락률
-                "is_52w_high": is_52w_high, # 신고가 여부
-                "high_pct":    high_pct,    # 전고점 대비 %
+                "vol_ratio":   vol_ratio,
+                "cum_pct":     cum_pct,
+                "is_52w_high": is_52w_high,
+                "high_pct":    high_pct,
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)

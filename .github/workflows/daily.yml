@@ -23,6 +23,14 @@ jobs:
       - name: 라이브러리 설치
         run: pip install -r requirements.txt
 
+      - name: 원시 데이터 캐시 복원
+        uses: actions/cache@v4
+        with:
+          path: docs/data/raw
+          key: krx-raw-${{ runner.os }}-${{ hashFiles('krx_market.py') }}
+          restore-keys: |
+            krx-raw-${{ runner.os }}-
+
       - name: 리포트 생성
         env:
           DART_API_KEY: ${{ secrets.DART_API_KEY }}
