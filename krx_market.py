@@ -5,6 +5,9 @@ from datetime import datetime, timedelta
 KRX_API_KEY = os.environ.get("KRX_API_KEY", "")
 API_BASE    = "https://data-dbg.krx.co.kr/svc/apis/sto"
 
+WINDOW_DAYS = {"1m": 22, "2m": 44, "6m": 130, "12m": 260}
+WINDOW_LABELS = {"1m": "1개월", "2m": "2개월", "6m": "6개월", "12m": "12개월"}
+
 ENDPOINTS = {
     "KOSPI":  { "daily": "/stk_bydd_trd", "info": "/stk_isu_base_info" },
     "KOSDAQ": { "daily": "/ksq_bydd_trd", "info": "/ksq_isu_base_info" },
@@ -58,7 +61,7 @@ def _parse_volume(item):
     except:
         return 0
 
-def get_market_data(n_days=20):
+def get_market_data(n_days=260):
     biz_dates = _last_biz_dates(n_days)
     stocks = {}
 
@@ -116,10 +119,10 @@ def _calc_extra(prices):
     return vol_ratio, cum_pct, is_52w_high, high_pct
 
 
-def find_consecutive_surge(stocks, min_days=3, min_pct=10.0):
+def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
     result = []
     for code, info in stocks.items():
-        prices  = info["prices"]
+        prices  = info["prices"][-window_days:] if window_days else info["prices"]
         streaks = []
         i = 0
         while i < len(prices):
@@ -159,14 +162,14 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0):
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)
-    print(f"[분석] 연속 상승 종목 {len(result)}개 발견")
+    print(f"[분석] 연속 상승({window_days}일) {len(result)}개 발견")
     return result
 
 
-def find_consecutive_decline(stocks, min_days=5):
+def find_consecutive_decline(stocks, min_days=5, window_days=22):
     result = []
     for code, info in stocks.items():
-        prices  = info["prices"]
+        prices  = info["prices"][-window_days:] if window_days else info["prices"]
         streaks = []
         i = 0
         while i < len(prices):
@@ -206,7 +209,7 @@ def find_consecutive_decline(stocks, min_days=5):
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)
-    print(f"[분석] 연속 하락 종목 {len(result)}개 발견")
+    print(f"[분석] 연속 하락({window_days}일) {len(result)}개 발견")
     return result
 
 

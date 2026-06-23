@@ -2,7 +2,7 @@ import os, json
 from datetime import datetime
 from dart_fetcher import fetch_all
 from krx_fetcher import get_stock_code_from_name, get_10day_price
-from krx_market  import get_market_data, find_consecutive_surge, find_consecutive_decline, get_top10_fluctuation
+from krx_market  import get_market_data, find_consecutive_surge, find_consecutive_decline, get_top10_fluctuation, WINDOW_DAYS, WINDOW_LABELS
 from config import DART_API_KEY
 
 WEEKDAY_KR = ["월", "화", "수", "목", "금", "토", "일"]
@@ -245,13 +245,23 @@ def build():
     time_str  = today.strftime("%H:%M")
     date_key  = today.strftime("%Y-%m-%d")
 
-    print("=== 시장 데이터 수집 ===")
-    stocks = get_market_data(n_days=20)
+    print("=== 시장 데이터 수집 (12개월) ===")
+    stocks = get_market_data(n_days=260)
 
-    print("=== 분석 ===")
-    surge_list       = find_consecutive_surge(stocks, min_days=3, min_pct=10.0)
-    decline_list     = find_consecutive_decline(stocks, min_days=5)
+    print("=== 분석 (4개 기간) ===")
     top_up, top_down = get_top10_fluctuation(stocks)
+    windows_data = {}
+    for wkey, wdays in WINDOW_DAYS.items():
+        windows_data[wkey] = {
+            "surge_list":   find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=wdays),
+            "decline_list": find_consecutive_decline(stocks, min_days=5, window_days=wdays),
+            "top_up":       top_up,
+            "top_down":     top_down,
+        }
+
+    # 기본 표시는 1개월
+    surge_list   = windows_data["1m"]["surge_list"]
+    decline_list = windows_data["1m"]["decline_list"]
 
     print("=== 공시 수집 ===")
     disc = fetch_all(days=1)
@@ -259,6 +269,7 @@ def build():
     surge_html   = col_surge(surge_list)
     decline_html = col_decline(decline_list)
     top10_html   = col_top10(top_up, top_down)
+    windows_json = json.dumps(windows_data, ensure_ascii=False)
     warn_card    = disc_card(disc["warn"],     "pill-warn", "희석위험", "#E24B4A", "⚠ 희석 위험 공시")
     good_card    = disc_card(disc["good"],     "pill-safe", "긍정공시", "#639922", "👍 긍정적 공시")
     earn_card    = disc_card(disc["earnings"], "pill-info", "잠정실적", "#185FA5", "📊 잠정실적 공시")
@@ -277,9 +288,11 @@ def build():
         return result
 
     report_data = {
-        "date":         date_key,
-        "date_str":     today_str,
-        "time_str":     time_str,
+        "date":     date_key,
+        "date_str": today_str,
+        "time_str": time_str,
+        "windows":  windows_data,
+        # 하위호환: 1m 기본값 유지
         "surge_list":   surge_list,
         "decline_list": decline_list,
         "top_up":       top_up,
@@ -410,6 +423,14 @@ def build():
   .stat-vol{{background:#EEF2FF;color:#3730A3;}}
   .stat-cum{{background:#F5F5F5;}}
 
+  /* 기간 탭 */
+  .window-tabs{{display:flex;gap:5px;margin-bottom:14px;}}
+  .wtab{{font-size:11px;font-weight:500;padding:5px 12px;border-radius:8px;border:0.5px solid #ddd;
+         background:#fff;color:#888;cursor:pointer;transition:all .15s;}}
+  .wtab:hover{{border-color:#185FA5;color:#185FA5;}}
+  .wtab.active{{background:#185FA5;color:#fff;border-color:#185FA5;}}
+  .wtab-label{{font-size:10px;color:#aaa;margin-right:4px;align-self:center;}}
+
   .empty{{font-size:12px;color:#bbb;padding:6px 0;}}
   .loading{{font-size:12px;color:#aaa;padding:20px;text-align:center;}}
   .footer{{font-size:11px;color:#ccc;text-align:center;margin-top:24px;
@@ -436,6 +457,14 @@ def build():
   </div>
 
   <div id="history-badge">📅 과거 리포트 조회 중</div>
+
+  <div class="window-tabs">
+    <span class="wtab-label">분석 기간</span>
+    <button class="wtab active" data-w="1m" onclick="switchWindow('1m')">1개월</button>
+    <button class="wtab" data-w="2m" onclick="switchWindow('2m')">2개월</button>
+    <button class="wtab" data-w="6m" onclick="switchWindow('6m')">6개월</button>
+    <button class="wtab" data-w="12m" onclick="switchWindow('12m')">12개월</button>
+  </div>
 
   <div id="main-content">
     <div class="three-col">
@@ -477,6 +506,16 @@ const BASE = location.origin + '/stock-report';
 const TODAY_KEY = '{date_key}';
 let todayContent = document.getElementById('main-content').innerHTML;
 let chartInstances = [];
+let currentWindow = '1m';
+const WINDOWS_DATA = {windows_json};
+
+function switchWindow(w) {{
+  currentWindow = w;
+  document.querySelectorAll('.wtab').forEach(b => b.classList.toggle('active', b.dataset.w === w));
+  const src = WINDOWS_DATA[w] || WINDOWS_DATA['1m'];
+  destroyCharts();
+  document.getElementById('main-content').innerHTML = renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
+}}
 
 // 날짜 목록 로드
 async function loadDateIndex() {{
@@ -532,7 +571,9 @@ async function loadDate(dateKey) {{
 
 function goToday() {{
   destroyCharts();
-  document.getElementById('main-content').innerHTML = todayContent;
+  const src = WINDOWS_DATA[currentWindow] || WINDOWS_DATA['1m'];
+  document.getElementById('main-content').innerHTML =
+    currentWindow === '1m' ? todayContent : renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
   document.getElementById('history-badge').style.display = 'none';
   document.getElementById('date-select').value = TODAY_KEY;
   document.getElementById('report-meta').innerHTML =
@@ -666,13 +707,18 @@ function renderHistoryCharts(d) {{
   }});
 }}
 
-function renderData(d) {{
+function renderThreeCol(surge_list, decline_list, top_up, top_down) {{
   return `
     <div class="three-col">
-      <div class="col-panel"><div class="col-title" style="color:#3B6D11"><i>▲</i> ① 3영업일 이상 연속 10% 상승</div>${{renderSurge(d.surge_list)}}</div>
-      <div class="col-panel"><div class="col-title" style="color:#A32D2D"><i>▼</i> ② 5영업일 이상 연속 하락</div>${{renderDecline(d.decline_list)}}</div>
-      <div class="col-panel"><div class="col-title" style="color:#1a1a1a">③ 전일 상승 / 하락 TOP 10</div>${{renderTop10(d.top_up, d.top_down)}}</div>
-    </div>
+      <div class="col-panel"><div class="col-title" style="color:#3B6D11"><i>▲</i> ① 3영업일 이상 연속 10% 상승</div>${{renderSurge(surge_list)}}</div>
+      <div class="col-panel"><div class="col-title" style="color:#A32D2D"><i>▼</i> ② 5영업일 이상 연속 하락</div>${{renderDecline(decline_list)}}</div>
+      <div class="col-panel"><div class="col-title" style="color:#1a1a1a">③ 전일 상승 / 하락 TOP 10</div>${{renderTop10(top_up, top_down)}}</div>
+    </div>`;
+}}
+
+function renderData(d) {{
+  const src = (d.windows && d.windows[currentWindow]) || d;
+  return renderThreeCol(src.surge_list, src.decline_list, src.top_up || d.top_up, src.top_down || d.top_down) + `
     <div class="disc-section">
       <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
       <div class="disc-grid">
