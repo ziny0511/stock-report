@@ -108,6 +108,14 @@
   .pill-warn{background:#FCEBEB;color:#791F1F;}
   .pill-safe{background:#EAF3DE;color:#27500A;}
   .pill-info{background:#E6F1FB;color:#0C447C;}
+  .pill-high{background:#FFF3CD;color:#856404;border:0.5px solid #FFEAA0;}
+
+  /* 지표 배지 */
+  .stat-row{display:flex;gap:5px;margin:3px 0 4px;flex-wrap:wrap;}
+  .stat-badge{font-size:9px;font-weight:500;padding:1px 6px;border-radius:4px;white-space:nowrap;}
+  .stat-vol{background:#EEF2FF;color:#3730A3;}
+  .stat-cum{background:#F5F5F5;}
+
   .empty{font-size:12px;color:#bbb;padding:6px 0;}
   .loading{font-size:12px;color:#aaa;padding:20px;text-align:center;}
   .footer{font-size:11px;color:#ccc;text-align:center;margin-top:24px;
@@ -124,7 +132,7 @@
   <div class="report-header">
     <div>
       <div class="report-title">국내주식 일일 리포트</div>
-      <div class="report-meta" id="report-meta">2026년 06월 23일 05:47 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
+      <div class="report-meta" id="report-meta">2026년 06월 23일 06:16 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
     </div>
     <div class="date-picker-wrap">
       <span class="date-label">날짜 선택</span>
@@ -149,13 +157,14 @@
                 <span class="stock-name">삼성전기우</span><span class="stock-code">009155</span>
               </a>
             </div>
-            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end"><span class="pill pill-up">1구간 3일</span></div>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end"><span class="pill pill-up">1구간 3일</span> <span class="pill pill-high">★신고가</span></div>
           </div>
           <div class="stock-row">
             <span class="stock-vol">거래대금 4,699억</span>
             <span class="stock-price">954,000원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+17.9%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-vol">거래량 6.2x</span><span class="stat-badge stat-cum" style="color:#3B6D11">5일누적 +51.9%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 06/18(목)–06/22(월)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">06/18(목)</span>
@@ -180,13 +189,14 @@
                 <span class="stock-name">한울반도체</span><span class="stock-code">320000</span>
               </a>
             </div>
-            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end"><span class="pill pill-up">1구간 3일</span></div>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end"><span class="pill pill-up">1구간 3일</span> <span class="pill pill-high">★신고가</span></div>
           </div>
           <div class="stock-row">
             <span class="stock-vol">거래대금 2,050억</span>
             <span class="stock-price">23,150원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+29.9%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-vol">거래량 41.2x</span><span class="stat-badge stat-cum" style="color:#3B6D11">5일누적 +113.4%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 06/18(목)–06/22(월)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">06/18(목)</span>
@@ -218,6 +228,7 @@
             <span class="stock-price">2,120원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#A32D2D">-12.2%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-vol">거래량 25.7x</span><span class="stat-badge stat-cum" style="color:#3B6D11">5일누적 +92.7%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 06/17(수)–06/19(금)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">06/17(수)</span>
@@ -249,6 +260,7 @@
             <span class="stock-price">4,735원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#A32D2D">-16.6%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -30.7%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 06/08(월)–06/10(수)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">06/08(월)</span>
@@ -273,13 +285,14 @@
                 <span class="stock-name">서산</span><span class="stock-code">079650</span>
               </a>
             </div>
-            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end"><span class="pill pill-up">1구간 5일</span></div>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end"><span class="pill pill-up">1구간 5일</span> <span class="pill pill-high">★신고가</span></div>
           </div>
           <div class="stock-row">
             <span class="stock-vol">거래대금 280억</span>
             <span class="stock-price">6,250원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+29.8%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-vol">거래량 3.7x</span><span class="stat-badge stat-cum" style="color:#3B6D11">5일누적 +119.3%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 06/12(금)–06/18(목)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">06/12(금)</span>
@@ -321,6 +334,7 @@
             <span class="stock-price">98,700원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+3.9%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -7.3%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 05/29(금)–06/02(화)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">05/29(금)</span>
@@ -352,6 +366,7 @@
             <span class="stock-price">6,310원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#A32D2D">-5.7%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -7.6%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 06/04(목)–06/09(화)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">06/04(목)</span>
@@ -388,6 +403,7 @@
             <span class="stock-price">38,150원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+0.0%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -1.4%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-up">1구간 05/28(목)–06/01(월)</span></div><div class="day-row">
                   <span class="dot-up"></span>
                   <span class="day-label">05/28(목)</span>
@@ -425,6 +441,7 @@
             <span class="stock-price">227,500원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+7.6%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -2.8%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 06/04(목)–06/10(수)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">06/04(목)</span>
@@ -466,6 +483,7 @@
             <span class="stock-price">60,000원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+6.0%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -9.5%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 05/27(수)–06/02(화)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">05/27(수)</span>
@@ -507,6 +525,7 @@
             <span class="stock-price">56,800원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+15.9%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-vol">거래량 4.1x</span><span class="stat-badge stat-cum" style="color:#3B6D11">5일누적 +13.4%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 05/26(화)–06/01(월)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">05/26(화)</span>
@@ -548,6 +567,7 @@
             <span class="stock-price">172,500원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+10.6%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#3B6D11">5일누적 +10.5%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 05/27(수)–06/02(화)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">05/27(수)</span>
@@ -589,6 +609,7 @@
             <span class="stock-price">301,500원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+2.2%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -8.2%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 06/15(월)–06/19(금)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">06/15(월)</span>
@@ -630,6 +651,7 @@
             <span class="stock-price">569,000원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#A32D2D">-7.0%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -13.8%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 06/01(월)–06/10(수)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">06/01(월)</span>
@@ -681,6 +703,7 @@
             <span class="stock-price">116,500원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#A32D2D">-9.3%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -9.8%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 06/02(화)–06/09(화)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">06/02(화)</span>
@@ -722,6 +745,7 @@
             <span class="stock-price">89,500원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:#3B6D11">+4.3%</span>
           </div>
+          <div class="stat-row"><span class="stat-badge stat-cum" style="color:#A32D2D">5일누적 -3.7%</span></div>
           <div class="streak-wrap"><div class="streak-head"><span class="streak-label-down">1구간 06/02(화)–06/12(금)</span></div><div class="day-row">
                   <span class="dot-down"></span>
                   <span class="day-label">06/02(화)</span>
@@ -981,6 +1005,36 @@
         <div class="disc-item">
           <div class="disc-row">
             <span class="pill pill-warn">희석위험</span>
+            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260623000212" target="_blank" rel="noopener">
+              주요사항보고서(유상증자결정) <i class="li">↗</i></a>
+            <span class="disc-corp">헝셩그룹</span>
+            <span class="disc-date">06/23</span>
+          </div>
+          
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <span class="chart-corp">헝셩그룹&nbsp;<span style="font-weight:400;color:#888">557원</span></span>
+        <span style="font-size:11px;font-weight:500;color:#A32D2D">-5.8%</span>
+      </div>
+      <canvas id="chart_희석위험_3" height="60"></canvas>
+    </div>
+    <script>(function(){
+      new Chart(document.getElementById('chart_희석위험_3').getContext('2d'),{
+        type:'line',
+        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[641, 649, 642, 662, 653, 655, 647, 631, 591, 557],borderColor:'#E24B4A',borderWidth:1.5,
+          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
+          backgroundColor:'#E24B4A18',tension:0.3}]},
+        options:{responsive:true,plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
+          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
+            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
+              callback:function(v){return v.toLocaleString();}}}}}
+      });
+    })();</script>
+        </div>
+        <div class="disc-item">
+          <div class="disc-row">
+            <span class="pill pill-warn">희석위험</span>
             <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260623000019" target="_blank" rel="noopener">
               [기재정정]주요사항보고서(유상증자결정) <i class="li">↗</i></a>
             <span class="disc-corp">아미코젠</span>
@@ -992,10 +1046,10 @@
         <span class="chart-corp">아미코젠&nbsp;<span style="font-weight:400;color:#888">1,474원</span></span>
         <span style="font-size:11px;font-weight:500;color:#A32D2D">-2.6%</span>
       </div>
-      <canvas id="chart_희석위험_3" height="60"></canvas>
+      <canvas id="chart_희석위험_4" height="60"></canvas>
     </div>
     <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_3').getContext('2d'),{
+      new Chart(document.getElementById('chart_희석위험_4').getContext('2d'),{
         type:'line',
         data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[1309, 1268, 1295, 1304, 1294, 1298, 1324, 1311, 1513, 1474],borderColor:'#E24B4A',borderWidth:1.5,
           pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
@@ -1012,36 +1066,6 @@
           <div class="disc-row">
             <span class="pill pill-warn">희석위험</span>
             <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260623000018" target="_blank" rel="noopener">
-              [기재정정]주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
-            <span class="disc-corp">제이에스링크</span>
-            <span class="disc-date">06/23</span>
-          </div>
-          
-    <div class="chart-wrap">
-      <div class="chart-header">
-        <span class="chart-corp">제이에스링크&nbsp;<span style="font-weight:400;color:#888">35,250원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#A32D2D">-1.8%</span>
-      </div>
-      <canvas id="chart_희석위험_4" height="60"></canvas>
-    </div>
-    <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_4').getContext('2d'),{
-        type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[34550, 30900, 32850, 32950, 35700, 36100, 35000, 35200, 35900, 35250],borderColor:'#E24B4A',borderWidth:1.5,
-          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
-          backgroundColor:'#E24B4A18',tension:0.3}]},
-        options:{responsive:true,plugins:{legend:{display:false},
-          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
-          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
-            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
-              callback:function(v){return v.toLocaleString();}}}}}
-      });
-    })();</script>
-        </div>
-        <div class="disc-item">
-          <div class="disc-row">
-            <span class="pill pill-warn">희석위험</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260623000017" target="_blank" rel="noopener">
               [기재정정]주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
             <span class="disc-corp">제이에스링크</span>
             <span class="disc-date">06/23</span>
@@ -1071,6 +1095,36 @@
         <div class="disc-item">
           <div class="disc-row">
             <span class="pill pill-warn">희석위험</span>
+            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260623000017" target="_blank" rel="noopener">
+              [기재정정]주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
+            <span class="disc-corp">제이에스링크</span>
+            <span class="disc-date">06/23</span>
+          </div>
+          
+    <div class="chart-wrap">
+      <div class="chart-header">
+        <span class="chart-corp">제이에스링크&nbsp;<span style="font-weight:400;color:#888">35,250원</span></span>
+        <span style="font-size:11px;font-weight:500;color:#A32D2D">-1.8%</span>
+      </div>
+      <canvas id="chart_희석위험_6" height="60"></canvas>
+    </div>
+    <script>(function(){
+      new Chart(document.getElementById('chart_희석위험_6').getContext('2d'),{
+        type:'line',
+        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[34550, 30900, 32850, 32950, 35700, 36100, 35000, 35200, 35900, 35250],borderColor:'#E24B4A',borderWidth:1.5,
+          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
+          backgroundColor:'#E24B4A18',tension:0.3}]},
+        options:{responsive:true,plugins:{legend:{display:false},
+          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
+          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
+            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
+              callback:function(v){return v.toLocaleString();}}}}}
+      });
+    })();</script>
+        </div>
+        <div class="disc-item">
+          <div class="disc-row">
+            <span class="pill pill-warn">희석위험</span>
             <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622000404" target="_blank" rel="noopener">
               [기재정정]주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
             <span class="disc-corp">제이스코홀딩스</span>
@@ -1082,10 +1136,10 @@
         <span class="chart-corp">제이스코홀딩스&nbsp;<span style="font-weight:400;color:#888">521원</span></span>
         <span style="font-size:11px;font-weight:500;color:#3B6D11">+0.0%</span>
       </div>
-      <canvas id="chart_희석위험_6" height="60"></canvas>
+      <canvas id="chart_희석위험_7" height="60"></canvas>
     </div>
     <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_6').getContext('2d'),{
+      new Chart(document.getElementById('chart_희석위험_7').getContext('2d'),{
         type:'line',
         data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[521, 521, 521, 521, 521, 521, 521, 521, 521, 521],borderColor:'#E24B4A',borderWidth:1.5,
           pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
@@ -1112,10 +1166,10 @@
         <span class="chart-corp">아미코젠&nbsp;<span style="font-weight:400;color:#888">1,474원</span></span>
         <span style="font-size:11px;font-weight:500;color:#A32D2D">-2.6%</span>
       </div>
-      <canvas id="chart_희석위험_7" height="60"></canvas>
+      <canvas id="chart_희석위험_8" height="60"></canvas>
     </div>
     <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_7').getContext('2d'),{
+      new Chart(document.getElementById('chart_희석위험_8').getContext('2d'),{
         type:'line',
         data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[1309, 1268, 1295, 1304, 1294, 1298, 1324, 1311, 1513, 1474],borderColor:'#E24B4A',borderWidth:1.5,
           pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
@@ -1142,42 +1196,12 @@
         <span class="chart-corp">사토시홀딩스&nbsp;<span style="font-weight:400;color:#888">4,405원</span></span>
         <span style="font-size:11px;font-weight:500;color:#A32D2D">-1.0%</span>
       </div>
-      <canvas id="chart_희석위험_8" height="60"></canvas>
-    </div>
-    <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_8').getContext('2d'),{
-        type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[5240, 4550, 4820, 4860, 5000, 4860, 4540, 4520, 4450, 4405],borderColor:'#E24B4A',borderWidth:1.5,
-          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
-          backgroundColor:'#E24B4A18',tension:0.3}]},
-        options:{responsive:true,plugins:{legend:{display:false},
-          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
-          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
-            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
-              callback:function(v){return v.toLocaleString();}}}}}
-      });
-    })();</script>
-        </div>
-        <div class="disc-item">
-          <div class="disc-row">
-            <span class="pill pill-warn">희석위험</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622000362" target="_blank" rel="noopener">
-              [기재정정]주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
-            <span class="disc-corp">프레스티지바이오로직스</span>
-            <span class="disc-date">06/22</span>
-          </div>
-          
-    <div class="chart-wrap">
-      <div class="chart-header">
-        <span class="chart-corp">프레스티지바이오로직스&nbsp;<span style="font-weight:400;color:#888">1,868원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#3B6D11">+3.8%</span>
-      </div>
       <canvas id="chart_희석위험_9" height="60"></canvas>
     </div>
     <script>(function(){
       new Chart(document.getElementById('chart_희석위험_9').getContext('2d'),{
         type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[1797, 1834, 1889, 1907, 1925, 1908, 1927, 1845, 1800, 1868],borderColor:'#E24B4A',borderWidth:1.5,
+        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[5240, 4550, 4820, 4860, 5000, 4860, 4540, 4520, 4450, 4405],borderColor:'#E24B4A',borderWidth:1.5,
           pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
           backgroundColor:'#E24B4A18',tension:0.3}]},
         options:{responsive:true,plugins:{legend:{display:false},
@@ -1291,7 +1315,7 @@ function goToday() {
   document.getElementById('history-badge').style.display = 'none';
   document.getElementById('date-select').value = TODAY_KEY;
   document.getElementById('report-meta').innerHTML =
-    '2026년 06월 23일 05:47 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
+    '2026년 06월 23일 06:16 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
 }
 
 function volFmt(v) {
@@ -1312,7 +1336,12 @@ function fmtKrx(d) {
 function renderSurge(list) {
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
   return list.slice(0,8).map(s => {
-    const pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${i+1}구간 ${sk.days}일</span>`).join(' ');
+    let pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${i+1}구간 ${sk.days}일</span>`).join(' ');
+    if (s.is_52w_high) pills += ' <span class="pill pill-high">★신고가</span>';
+    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol">거래량 ${s.vol_ratio.toFixed(1)}x</span>` : '';
+    const cumSign = s.cum_pct >= 0 ? '+' : '';
+    const cumColor = s.cum_pct >= 0 ? '#3B6D11' : '#A32D2D';
+    const cumHtml = `<span class="stat-badge stat-cum" style="color:${cumColor}">5일누적 ${cumSign}${s.cum_pct.toFixed(1)}%</span>`;
     let streaks = '';
     s.streaks.forEach((sk, si) => {
       if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">조정 구간</div><div class="gap-line"></div></div>';
@@ -1327,6 +1356,7 @@ function renderSurge(list) {
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${s.code}" target="_blank"><span class="stock-name">${s.name}</span><span class="stock-code">${s.code}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${pills}</div></div>
       <div class="stock-row"><span class="stock-vol">거래대금 ${volFmt(s.last_volume)}</span><span class="stock-price">${s.last_close.toLocaleString()}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${chgColor}">${chgSign}${s.last_chg.toFixed(1)}%</span></div>
+      <div class="stat-row">${volHtml}${cumHtml}</div>
       <div class="streak-wrap">${streaks}</div></div>`;
   }).join('');
 }
@@ -1335,6 +1365,10 @@ function renderDecline(list) {
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
   return list.slice(0,8).map(s => {
     const pills = s.streaks.map((sk,i) => `<span class="pill pill-down">${i+1}구간 ${sk.days}일</span>`).join(' ');
+    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol">거래량 ${s.vol_ratio.toFixed(1)}x</span>` : '';
+    const cumSign = s.cum_pct >= 0 ? '+' : '';
+    const cumColor = s.cum_pct >= 0 ? '#3B6D11' : '#A32D2D';
+    const cumHtml = `<span class="stat-badge stat-cum" style="color:${cumColor}">5일누적 ${cumSign}${s.cum_pct.toFixed(1)}%</span>`;
     let streaks = '';
     s.streaks.forEach((sk, si) => {
       if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">반등 구간</div><div class="gap-line"></div></div>';
@@ -1349,6 +1383,7 @@ function renderDecline(list) {
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${s.code}" target="_blank"><span class="stock-name">${s.name}</span><span class="stock-code">${s.code}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${pills}</div></div>
       <div class="stock-row"><span class="stock-vol">거래대금 ${volFmt(s.last_volume)}</span><span class="stock-price">${s.last_close.toLocaleString()}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${chgColor}">${chgSign}${s.last_chg.toFixed(1)}%</span></div>
+      <div class="stat-row">${volHtml}${cumHtml}</div>
       <div class="streak-wrap">${streaks}</div></div>`;
   }).join('');
 }
