@@ -489,28 +489,30 @@ def build():
   </div>
 
   <div id="main-content">
-    <div class="three-col">
-      <div class="col-panel">
-        <div class="col-title" style="color:#3B6D11">
-          <i>▲</i> ① 3영업일 이상 연속 10% 상승
+    <div id="market-cols">
+      <div class="three-col">
+        <div class="col-panel">
+          <div class="col-title" style="color:#3B6D11">
+            <i>▲</i> ① 3영업일 이상 연속 10% 상승
+          </div>
+          {surge_html}
         </div>
-        {surge_html}
-      </div>
-      <div class="col-panel">
-        <div class="col-title" style="color:#A32D2D">
-          <i>▼</i> ② 5영업일 이상 연속 하락
+        <div class="col-panel">
+          <div class="col-title" style="color:#A32D2D">
+            <i>▼</i> ② 5영업일 이상 연속 하락
+          </div>
+          {decline_html}
         </div>
-        {decline_html}
-      </div>
-      <div class="col-panel">
-        <div class="col-title" style="color:#1a1a1a">
-          ③ 전일 상승 / 하락 TOP 10
+        <div class="col-panel">
+          <div class="col-title" style="color:#1a1a1a">
+            ③ 전일 상승 / 하락 TOP 10
+          </div>
+          {top10_html}
         </div>
-        {top10_html}
       </div>
     </div>
 
-    <div class="disc-section">
+    <div id="disc-section-wrap" class="disc-section">
       <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
       <div class="disc-grid">
         {warn_card}
@@ -526,7 +528,7 @@ def build():
 <script>
 const BASE = location.origin + '/stock-report';
 const TODAY_KEY = '{date_key}';
-let todayContent = document.getElementById('main-content').innerHTML;
+let todayDiscContent = document.getElementById('disc-section-wrap').innerHTML;
 let chartInstances = [];
 let currentWindow = '1m';
 const WINDOWS_DATA = {windows_json};
@@ -536,7 +538,7 @@ function switchWindow(w) {{
   document.querySelectorAll('.wtab').forEach(b => b.classList.toggle('active', b.dataset.w === w));
   const src = WINDOWS_DATA[w] || WINDOWS_DATA['1m'];
   destroyCharts();
-  document.getElementById('main-content').innerHTML = renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
+  document.getElementById('market-cols').innerHTML = renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
 }}
 
 // 날짜 목록 로드
@@ -583,7 +585,9 @@ async function loadDate(dateKey) {{
     const d = await r.json();
     document.getElementById('report-meta').innerHTML =
       d.date_str + ' ' + d.time_str + ' 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
-    content.innerHTML = renderData(d);
+    const rendered = renderData(d);
+    document.getElementById('market-cols').innerHTML = rendered.market;
+    document.getElementById('disc-section-wrap').innerHTML = rendered.disc;
     // 차트 렌더링
     renderHistoryCharts(d);
   }} catch(e) {{
@@ -594,8 +598,8 @@ async function loadDate(dateKey) {{
 function goToday() {{
   destroyCharts();
   const src = WINDOWS_DATA[currentWindow] || WINDOWS_DATA['1m'];
-  document.getElementById('main-content').innerHTML =
-    currentWindow === '1m' ? todayContent : renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
+  document.getElementById('market-cols').innerHTML = renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
+  document.getElementById('disc-section-wrap').innerHTML = todayDiscContent;
   document.getElementById('history-badge').style.display = 'none';
   document.getElementById('date-select').value = TODAY_KEY;
   document.getElementById('report-meta').innerHTML =
@@ -744,15 +748,15 @@ function renderThreeCol(surge_list, decline_list, top_up, top_down) {{
 
 function renderData(d) {{
   const src = (d.windows && d.windows[currentWindow]) || d;
-  return renderThreeCol(src.surge_list, src.decline_list, src.top_up || d.top_up, src.top_down || d.top_down) + `
-    <div class="disc-section">
-      <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
+  return {{
+    market: renderThreeCol(src.surge_list, src.decline_list, src.top_up || d.top_up, src.top_down || d.top_down),
+    disc: `<div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
       <div class="disc-grid">
         ${{renderDiscCard(d.disc.warn,     'pill-warn', '희석위험', '#E24B4A', '⚠ 희석 위험 공시',     d.date)}}
         ${{renderDiscCard(d.disc.good,     'pill-safe', '긍정공시', '#639922', '👍 긍정적 공시',        d.date)}}
         ${{renderDiscCard(d.disc.earnings, 'pill-info', '잠정실적', '#185FA5', '📊 잠정실적 공시',      d.date)}}
-      </div>
-    </div>`;
+      </div>`
+  }};
 }}
 
 document.getElementById('date-select').addEventListener('change', e => loadDate(e.target.value));
