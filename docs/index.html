@@ -10,11 +10,24 @@
   body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
         background:#f5f5f3;color:#1a1a1a;padding:20px 16px;}
   .wrap{max-width:1200px;margin:0 auto;}
-  .report-header{margin-bottom:16px;padding-bottom:12px;border-bottom:0.5px solid #e0e0e0;}
+  .report-header{margin-bottom:16px;padding-bottom:12px;border-bottom:0.5px solid #e0e0e0;
+                  display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px;}
   .report-title{font-size:18px;font-weight:500;margin-bottom:3px;}
   .report-meta{font-size:12px;color:#888;}
   .s-label{font-size:11px;font-weight:500;color:#888;letter-spacing:.05em;
             text-transform:uppercase;margin-bottom:8px;}
+
+  /* 날짜 선택기 */
+  .date-picker-wrap{display:flex;align-items:center;gap:8px;}
+  .date-label{font-size:11px;color:#aaa;}
+  #date-select{font-size:12px;border:0.5px solid #ddd;border-radius:8px;
+               padding:5px 10px;background:#fff;color:#1a1a1a;cursor:pointer;outline:none;}
+  #date-select:focus{border-color:#185FA5;}
+  .today-btn{font-size:11px;color:#185FA5;cursor:pointer;padding:5px 8px;
+              border:0.5px solid #185FA5;border-radius:8px;background:#fff;}
+  .today-btn:hover{background:#E6F1FB;}
+  #history-badge{display:none;font-size:11px;background:#FFF3CD;color:#856404;
+                  padding:4px 10px;border-radius:99px;margin-bottom:12px;}
 
   /* 3분할 */
   .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;
@@ -96,27 +109,39 @@
   .pill-safe{background:#EAF3DE;color:#27500A;}
   .pill-info{background:#E6F1FB;color:#0C447C;}
   .empty{font-size:12px;color:#bbb;padding:6px 0;}
+  .loading{font-size:12px;color:#aaa;padding:20px;text-align:center;}
   .footer{font-size:11px;color:#ccc;text-align:center;margin-top:24px;
            padding-top:12px;border-top:0.5px solid #e0e0e0;}
 
   @media(max-width:900px){
     .three-col,.disc-grid{grid-template-columns:1fr;}
+    .report-header{flex-direction:column;align-items:flex-start;}
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="report-header">
-    <div class="report-title">국내주식 일일 리포트</div>
-    <div class="report-meta">2026년 06월 23일 03:15 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
+    <div>
+      <div class="report-title">국내주식 일일 리포트</div>
+      <div class="report-meta" id="report-meta">2026년 06월 23일 05:47 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
+    </div>
+    <div class="date-picker-wrap">
+      <span class="date-label">날짜 선택</span>
+      <select id="date-select"><option value="2026-06-23">2026년 06월 23일</option></select>
+      <button class="today-btn" onclick="goToday()">오늘</button>
+    </div>
   </div>
 
-  <div class="three-col">
-    <div class="col-panel">
-      <div class="col-title" style="color:#3B6D11">
-        <i>▲</i> ① 3영업일 이상 연속 10% 상승
-      </div>
-      
+  <div id="history-badge">📅 과거 리포트 조회 중</div>
+
+  <div id="main-content">
+    <div class="three-col">
+      <div class="col-panel">
+        <div class="col-title" style="color:#3B6D11">
+          <i>▲</i> ① 3영업일 이상 연속 10% 상승
+        </div>
+        
         <div class="stock-item">
           <div class="stock-row">
             <div>
@@ -380,12 +405,12 @@
                   <span class="dprice">59,600원</span>
                 </div></div>
         </div>
-    </div>
-    <div class="col-panel">
-      <div class="col-title" style="color:#A32D2D">
-        <i>▼</i> ② 5영업일 이상 연속 하락
       </div>
-      
+      <div class="col-panel">
+        <div class="col-title" style="color:#A32D2D">
+          <i>▼</i> ② 5영업일 이상 연속 하락
+        </div>
+        
         <div class="stock-item">
           <div class="stock-row">
             <div>
@@ -739,12 +764,12 @@
                   <span class="dprice">92,800원</span>
                 </div></div>
         </div>
-    </div>
-    <div class="col-panel">
-      <div class="col-title" style="color:#1a1a1a">
-        ③ 전일 상승 / 하락 TOP 10
       </div>
-      
+      <div class="col-panel">
+        <div class="col-title" style="color:#1a1a1a">
+          ③ 전일 상승 / 하락 TOP 10
+        </div>
+        
     <div class="top10-block">
       <div class="top10-head" style="color:#3B6D11">▲ 상승 TOP 10</div>
       <div class="t-col-head"><span></span><span>종목</span><span style="text-align:right">등락</span><span style="text-align:right">종가</span></div>
@@ -856,13 +881,13 @@
               <span class="t-price">2,765원</span>
             </div>
     </div>
+      </div>
     </div>
-  </div>
 
-  <div class="disc-section">
-    <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
-    <div class="disc-grid">
-      <div class="disc-card"><div class="disc-title" style="color:#E24B4A">⚠ 희석 위험 공시</div>
+    <div class="disc-section">
+      <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
+      <div class="disc-grid">
+        <div class="disc-card"><div class="disc-title" style="color:#E24B4A">⚠ 희석 위험 공시</div>
         <div class="disc-item">
           <div class="disc-row">
             <span class="pill pill-warn">희석위험</span>
@@ -1162,148 +1187,28 @@
               callback:function(v){return v.toLocaleString();}}}}}
       });
     })();</script>
-        </div>
-        <div class="disc-item">
-          <div class="disc-row">
-            <span class="pill pill-warn">희석위험</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622000339" target="_blank" rel="noopener">
-              [첨부정정]주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
-            <span class="disc-corp">중앙첨단소재</span>
-            <span class="disc-date">06/22</span>
-          </div>
-          
-    <div class="chart-wrap">
-      <div class="chart-header">
-        <span class="chart-corp">중앙첨단소재&nbsp;<span style="font-weight:400;color:#888">1,143원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#A32D2D">-6.8%</span>
-      </div>
-      <canvas id="chart_희석위험_10" height="60"></canvas>
-    </div>
-    <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_10').getContext('2d'),{
-        type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[1312, 1300, 1360, 1348, 1373, 1379, 1364, 1285, 1226, 1143],borderColor:'#E24B4A',borderWidth:1.5,
-          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
-          backgroundColor:'#E24B4A18',tension:0.3}]},
-        options:{responsive:true,plugins:{legend:{display:false},
-          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
-          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
-            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
-              callback:function(v){return v.toLocaleString();}}}}}
-      });
-    })();</script>
-        </div>
-        <div class="disc-item">
-          <div class="disc-row">
-            <span class="pill pill-warn">희석위험</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622900678" target="_blank" rel="noopener">
-              신주인수권부사채(해외신주인수권부사채포함)발행후만기전사채취득               <i class="li">↗</i></a>
-            <span class="disc-corp">나노신소재</span>
-            <span class="disc-date">06/22</span>
-          </div>
-          
-    <div class="chart-wrap">
-      <div class="chart-header">
-        <span class="chart-corp">나노신소재&nbsp;<span style="font-weight:400;color:#888">55,100원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#A32D2D">-1.4%</span>
-      </div>
-      <canvas id="chart_희석위험_11" height="60"></canvas>
-    </div>
-    <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_11').getContext('2d'),{
-        type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[56000, 54500, 55500, 57700, 63000, 60800, 60500, 57600, 55900, 55100],borderColor:'#E24B4A',borderWidth:1.5,
-          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
-          backgroundColor:'#E24B4A18',tension:0.3}]},
-        options:{responsive:true,plugins:{legend:{display:false},
-          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
-          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
-            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
-              callback:function(v){return v.toLocaleString();}}}}}
-      });
-    })();</script>
-        </div>
-        <div class="disc-item">
-          <div class="disc-row">
-            <span class="pill pill-warn">희석위험</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622000309" target="_blank" rel="noopener">
-              주요사항보고서(전환사채권발행결정) <i class="li">↗</i></a>
-            <span class="disc-corp">사토시홀딩스</span>
-            <span class="disc-date">06/22</span>
-          </div>
-          
-    <div class="chart-wrap">
-      <div class="chart-header">
-        <span class="chart-corp">사토시홀딩스&nbsp;<span style="font-weight:400;color:#888">4,405원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#A32D2D">-1.0%</span>
-      </div>
-      <canvas id="chart_희석위험_12" height="60"></canvas>
-    </div>
-    <script>(function(){
-      new Chart(document.getElementById('chart_희석위험_12').getContext('2d'),{
-        type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[5240, 4550, 4820, 4860, 5000, 4860, 4540, 4520, 4450, 4405],borderColor:'#E24B4A',borderWidth:1.5,
-          pointRadius:2,pointBackgroundColor:'#E24B4A',fill:true,
-          backgroundColor:'#E24B4A18',tension:0.3}]},
-        options:{responsive:true,plugins:{legend:{display:false},
-          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
-          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
-            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
-              callback:function(v){return v.toLocaleString();}}}}}
-      });
-    })();</script>
         </div></div>
-      <div class="disc-card"><div class="disc-title" style="color:#639922">👍 긍정적 공시</div>
+        <div class="disc-card"><div class="disc-title" style="color:#639922">👍 긍정적 공시</div>
         <div class="disc-item">
           <div class="disc-row">
             <span class="pill pill-safe">긍정공시</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622000235" target="_blank" rel="noopener">
+            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260623000188" target="_blank" rel="noopener">
               주요사항보고서(자기주식취득결정) <i class="li">↗</i></a>
-            <span class="disc-corp">태원물산</span>
-            <span class="disc-date">06/22</span>
+            <span class="disc-corp">감성코퍼레이션</span>
+            <span class="disc-date">06/23</span>
           </div>
           
     <div class="chart-wrap">
       <div class="chart-header">
-        <span class="chart-corp">태원물산&nbsp;<span style="font-weight:400;color:#888">2,370원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#A32D2D">-2.5%</span>
+        <span class="chart-corp">감성코퍼레이션&nbsp;<span style="font-weight:400;color:#888">4,375원</span></span>
+        <span style="font-size:11px;font-weight:500;color:#A32D2D">-5.8%</span>
       </div>
       <canvas id="chart_긍정공시_0" height="60"></canvas>
     </div>
     <script>(function(){
       new Chart(document.getElementById('chart_긍정공시_0').getContext('2d'),{
         type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[2130, 2175, 2270, 2350, 2390, 2380, 2380, 2385, 2430, 2370],borderColor:'#639922',borderWidth:1.5,
-          pointRadius:2,pointBackgroundColor:'#639922',fill:true,
-          backgroundColor:'#63992218',tension:0.3}]},
-        options:{responsive:true,plugins:{legend:{display:false},
-          tooltip:{callbacks:{label:function(c){return c.parsed.y.toLocaleString()+'원';}}}  },
-          scales:{x:{grid:{display:false},ticks:{font:{size:9},color:'#aaa'}},
-            y:{grid:{color:'#f5f5f5'},ticks:{font:{size:9},color:'#aaa',
-              callback:function(v){return v.toLocaleString();}}}}}
-      });
-    })();</script>
-        </div>
-        <div class="disc-item">
-          <div class="disc-row">
-            <span class="pill pill-safe">긍정공시</span>
-            <a class="disc-name" href="https://dart.fss.or.kr/dsaf001/main.do?rcpNo=20260622000324" target="_blank" rel="noopener">
-              주요사항보고서(자기주식취득결정) <i class="li">↗</i></a>
-            <span class="disc-corp">비트컴퓨터</span>
-            <span class="disc-date">06/22</span>
-          </div>
-          
-    <div class="chart-wrap">
-      <div class="chart-header">
-        <span class="chart-corp">비트컴퓨터&nbsp;<span style="font-weight:400;color:#888">3,920원</span></span>
-        <span style="font-size:11px;font-weight:500;color:#A32D2D">-2.1%</span>
-      </div>
-      <canvas id="chart_긍정공시_1" height="60"></canvas>
-    </div>
-    <script>(function(){
-      new Chart(document.getElementById('chart_긍정공시_1').getContext('2d'),{
-        type:'line',
-        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[4130, 4140, 4195, 4260, 4270, 4275, 4260, 4150, 4005, 3920],borderColor:'#639922',borderWidth:1.5,
+        data:{labels:["06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/19", "06/22"],datasets:[{data:[5080, 5050, 5030, 4875, 5010, 4870, 5230, 4995, 4645, 4375],borderColor:'#639922',borderWidth:1.5,
           pointRadius:2,pointBackgroundColor:'#639922',fill:true,
           backgroundColor:'#63992218',tension:0.3}]},
         options:{responsive:true,plugins:{legend:{display:false},
@@ -1314,11 +1219,216 @@
       });
     })();</script>
         </div></div>
-      <div class="disc-card"><div class="disc-title" style="color:#185FA5">📊 잠정실적 공시</div><div class="empty">해당 공시 없음</div></div>
+        <div class="disc-card"><div class="disc-title" style="color:#185FA5">📊 잠정실적 공시</div><div class="empty">해당 공시 없음</div></div>
+      </div>
     </div>
   </div>
 
   <div class="footer">DART + KRX Open API 기반 자동 생성 &nbsp;|&nbsp; ziny0511.github.io/stock-report</div>
 </div>
+
+<script>
+const BASE = location.origin + '/stock-report';
+const TODAY_KEY = '2026-06-23';
+let todayContent = document.getElementById('main-content').innerHTML;
+let chartInstances = [];
+
+// 날짜 목록 로드
+async function loadDateIndex() {
+  try {
+    const r = await fetch(BASE + '/data/index.json?t=' + Date.now());
+    const data = await r.json();
+    const sel = document.getElementById('date-select');
+    sel.innerHTML = '';
+    data.dates.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d;
+      opt.textContent = formatDateLabel(d);
+      if (d === TODAY_KEY) opt.textContent += ' (오늘)';
+      sel.appendChild(opt);
+    });
+    sel.value = TODAY_KEY;
+  } catch(e) { console.log('index.json 없음, 오늘만 표시'); }
+}
+
+function formatDateLabel(d) {
+  const [y,m,day] = d.split('-');
+  const days = ['일','월','화','수','목','금','토'];
+  const dow = days[new Date(d).getDay()];
+  return `${y}년 ${m}월 ${day}일(${dow})`;
+}
+
+function destroyCharts() {
+  Chart.helpers && Chart.instances && Object.values(Chart.instances).forEach(c => c.destroy());
+}
+
+async function loadDate(dateKey) {
+  if (dateKey === TODAY_KEY) {
+    goToday();
+    return;
+  }
+  const content = document.getElementById('main-content');
+  const badge = document.getElementById('history-badge');
+  content.innerHTML = '<div class="loading">불러오는 중...</div>';
+  badge.style.display = 'block';
+  try {
+    const r = await fetch(BASE + '/data/' + dateKey + '.json?t=' + Date.now());
+    if (!r.ok) throw new Error('파일 없음');
+    const d = await r.json();
+    document.getElementById('report-meta').innerHTML =
+      d.date_str + ' ' + d.time_str + ' 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
+    content.innerHTML = renderData(d);
+    // 차트 렌더링
+    renderHistoryCharts(d);
+  } catch(e) {
+    content.innerHTML = '<div class="loading">해당 날짜 데이터를 불러올 수 없습니다.</div>';
+  }
+}
+
+function goToday() {
+  destroyCharts();
+  document.getElementById('main-content').innerHTML = todayContent;
+  document.getElementById('history-badge').style.display = 'none';
+  document.getElementById('date-select').value = TODAY_KEY;
+  document.getElementById('report-meta').innerHTML =
+    '2026년 06월 23일 05:47 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
+}
+
+function volFmt(v) {
+  if (v >= 100000000) return Math.floor(v/100000000).toLocaleString() + '억';
+  if (v >= 10000) return Math.floor(v/10000).toLocaleString() + '만';
+  return v.toLocaleString();
+}
+
+function fmtKrx(d) {
+  if (!d) return '';
+  const days = ['일','월','화','수','목','금','토'];
+  try {
+    const dt = new Date(d.slice(0,4)+'-'+d.slice(4,6)+'-'+d.slice(6,8));
+    return d.slice(4,6)+'/'+d.slice(6,8)+'('+days[dt.getDay()]+')';
+  } catch(e) { return d.slice(4,6)+'/'+d.slice(6,8); }
+}
+
+function renderSurge(list) {
+  if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
+  return list.slice(0,8).map(s => {
+    const pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${i+1}구간 ${sk.days}일</span>`).join(' ');
+    let streaks = '';
+    s.streaks.forEach((sk, si) => {
+      if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">조정 구간</div><div class="gap-line"></div></div>';
+      streaks += `<div class="streak-head"><span class="streak-label-up">${si+1}구간 ${fmtKrx(sk.start)}–${fmtKrx(sk.end)}</span></div>`;
+      for (let di=0; di<sk.days; di++) {
+        streaks += `<div class="day-row"><span class="dot-up"></span><span class="day-label">${fmtKrx(sk.dates[di])}</span><span class="pct-up">+${sk.pcts[di].toFixed(1)}%</span><span class="dprice">${sk.closes[di].toLocaleString()}원</span></div>`;
+      }
+    });
+    const chgColor = s.last_chg >= 0 ? '#3B6D11' : '#A32D2D';
+    const chgSign = s.last_chg >= 0 ? '+' : '';
+    return `<div class="stock-item">
+      <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${s.code}" target="_blank"><span class="stock-name">${s.name}</span><span class="stock-code">${s.code}</span></a></div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${pills}</div></div>
+      <div class="stock-row"><span class="stock-vol">거래대금 ${volFmt(s.last_volume)}</span><span class="stock-price">${s.last_close.toLocaleString()}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${chgColor}">${chgSign}${s.last_chg.toFixed(1)}%</span></div>
+      <div class="streak-wrap">${streaks}</div></div>`;
+  }).join('');
+}
+
+function renderDecline(list) {
+  if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
+  return list.slice(0,8).map(s => {
+    const pills = s.streaks.map((sk,i) => `<span class="pill pill-down">${i+1}구간 ${sk.days}일</span>`).join(' ');
+    let streaks = '';
+    s.streaks.forEach((sk, si) => {
+      if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">반등 구간</div><div class="gap-line"></div></div>';
+      streaks += `<div class="streak-head"><span class="streak-label-down">${si+1}구간 ${fmtKrx(sk.start)}–${fmtKrx(sk.end)}</span></div>`;
+      for (let di=0; di<sk.days; di++) {
+        streaks += `<div class="day-row"><span class="dot-down"></span><span class="day-label">${fmtKrx(sk.dates[di])}</span><span class="pct-down">${sk.pcts[di].toFixed(1)}%</span><span class="dprice">${sk.closes[di].toLocaleString()}원</span></div>`;
+      }
+    });
+    const chgColor = s.last_chg >= 0 ? '#3B6D11' : '#A32D2D';
+    const chgSign = s.last_chg >= 0 ? '+' : '';
+    return `<div class="stock-item">
+      <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${s.code}" target="_blank"><span class="stock-name">${s.name}</span><span class="stock-code">${s.code}</span></a></div>
+      <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${pills}</div></div>
+      <div class="stock-row"><span class="stock-vol">거래대금 ${volFmt(s.last_volume)}</span><span class="stock-price">${s.last_close.toLocaleString()}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${chgColor}">${chgSign}${s.last_chg.toFixed(1)}%</span></div>
+      <div class="streak-wrap">${streaks}</div></div>`;
+  }).join('');
+}
+
+function renderTop10(top_up, top_down) {
+  const rows = (items, cls) => items.map((d,i) => {
+    const sign = d.chg_pct > 0 ? '+' : '';
+    return `<div class="t-row"><span class="t-rank">${i+1}</span><a class="stock-link t-name" href="https://finance.naver.com/item/main.naver?code=${d.code}" target="_blank">${d.name}</a><span class="${cls}">${sign}${d.chg_pct.toFixed(1)}%</span><span class="t-price">${d.close.toLocaleString()}원</span></div>`;
+  }).join('');
+  return `<div class="top10-block"><div class="top10-head" style="color:#3B6D11">▲ 상승 TOP 10</div>
+    <div class="t-col-head"><span></span><span>종목</span><span style="text-align:right">등락</span><span style="text-align:right">종가</span></div>${rows(top_up,'t-pct-up')}</div>
+    <div style="border-top:0.5px solid #f0f0f0;margin:8px 0;"></div>
+    <div class="top10-block"><div class="top10-head" style="color:#A32D2D">▼ 하락 TOP 10</div>
+    <div class="t-col-head"><span></span><span>종목</span><span style="text-align:right">등락</span><span style="text-align:right">종가</span></div>${rows(top_down,'t-pct-down')}</div>`;
+}
+
+function renderDiscCard(items, badgeClass, badgeText, color, title, dateKey) {
+  if (!items || !items.length) return `<div class="disc-card"><div class="disc-title" style="color:${color}">${title}</div><div class="empty">해당 공시 없음</div></div>`;
+  const inner = items.map((d,i) => {
+    const url = `https://dart.fss.or.kr/dsaf001/main.do?rcpNo=${d.rcept_no}`;
+    const dateStr = d.rcept_dt ? d.rcept_dt.slice(4,6)+'/'+d.rcept_dt.slice(6,8) : '';
+    const chartId = `hchart_${dateKey}_${badgeText}_${i}`;
+    const chartHtml = (d.prices && d.prices.length) ?
+      `<div class="chart-wrap"><div class="chart-header"><span class="chart-corp">${d.corp_name}&nbsp;<span style="font-weight:400;color:#888">${d.prices[d.prices.length-1].close.toLocaleString()}원</span></span></div><canvas id="${chartId}" height="60"></canvas></div>` :
+      '<div class="chart-ph">주가 데이터 없음</div>';
+    return `<div class="disc-item" data-chart-id="${chartId}" data-prices='${JSON.stringify(d.prices||[])}' data-color="${color}">
+      <div class="disc-row">
+        <span class="pill ${badgeClass}">${badgeText}</span>
+        <a class="disc-name" href="${url}" target="_blank">${d.report_nm} <i class="li">↗</i></a>
+        <span class="disc-corp">${d.corp_name}</span>
+        <span class="disc-date">${dateStr}</span>
+      </div>${chartHtml}</div>`;
+  }).join('');
+  return `<div class="disc-card"><div class="disc-title" style="color:${color}">${title}</div>${inner}</div>`;
+}
+
+function renderHistoryCharts(d) {
+  document.querySelectorAll('[data-chart-id]').forEach(el => {
+    const chartId = el.getAttribute('data-chart-id');
+    const prices = JSON.parse(el.getAttribute('data-prices') || '[]');
+    const color = el.getAttribute('data-color');
+    if (!prices.length) return;
+    const canvas = document.getElementById(chartId);
+    if (!canvas) return;
+    new Chart(canvas.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: prices.map(p => p.date),
+        datasets: [{ data: prices.map(p => p.close), borderColor: color, borderWidth: 1.5,
+          pointRadius: 2, pointBackgroundColor: color, fill: true,
+          backgroundColor: color + '18', tension: 0.3 }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false },
+        tooltip: { callbacks: { label: c => c.parsed.y.toLocaleString() + '원' } } },
+        scales: { x: { grid: { display: false }, ticks: { font: { size: 9 }, color: '#aaa' } },
+          y: { grid: { color: '#f5f5f5' }, ticks: { font: { size: 9 }, color: '#aaa',
+            callback: v => v.toLocaleString() } } } }
+    });
+  });
+}
+
+function renderData(d) {
+  return `
+    <div class="three-col">
+      <div class="col-panel"><div class="col-title" style="color:#3B6D11"><i>▲</i> ① 3영업일 이상 연속 10% 상승</div>${renderSurge(d.surge_list)}</div>
+      <div class="col-panel"><div class="col-title" style="color:#A32D2D"><i>▼</i> ② 5영업일 이상 연속 하락</div>${renderDecline(d.decline_list)}</div>
+      <div class="col-panel"><div class="col-title" style="color:#1a1a1a">③ 전일 상승 / 하락 TOP 10</div>${renderTop10(d.top_up, d.top_down)}</div>
+    </div>
+    <div class="disc-section">
+      <div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
+      <div class="disc-grid">
+        ${renderDiscCard(d.disc.warn,     'pill-warn', '희석위험', '#E24B4A', '⚠ 희석 위험 공시',     d.date)}
+        ${renderDiscCard(d.disc.good,     'pill-safe', '긍정공시', '#639922', '👍 긍정적 공시',        d.date)}
+        ${renderDiscCard(d.disc.earnings, 'pill-info', '잠정실적', '#185FA5', '📊 잠정실적 공시',      d.date)}
+      </div>
+    </div>`;
+}
+
+document.getElementById('date-select').addEventListener('change', e => loadDate(e.target.value));
+loadDateIndex();
+</script>
 </body>
 </html>
