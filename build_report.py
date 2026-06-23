@@ -89,10 +89,22 @@ def col_surge(surge_list):
         return "<div class='empty'>해당 종목 없음</div>"
     html = ""
     for s in surge_list[:8]:
-        last_close = s.get("last_close", 0)
-        last_chg   = s.get("last_chg", 0)
+        last_close  = s.get("last_close", 0)
+        last_chg    = s.get("last_chg", 0)
+        vol_ratio   = s.get("vol_ratio", 0.0)
+        cum_pct     = s.get("cum_pct", 0.0)
+        is_52w_high = s.get("is_52w_high", False)
+
         pills = " ".join([f'<span class="pill pill-up">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
+        if is_52w_high:
+            pills += ' <span class="pill pill-high">★신고가</span>'
+
+        vol_html = f'<span class="stat-badge stat-vol">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
+        cum_sign = "+" if cum_pct >= 0 else ""
+        cum_color = "#3B6D11" if cum_pct >= 0 else "#A32D2D"
+        cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
+
         streaks_html = ""
         for si, sk in enumerate(s["streaks"]):
             if si > 0:
@@ -120,6 +132,7 @@ def col_surge(surge_list):
             <span class="stock-price">{last_close:,}원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
           </div>
+          <div class="stat-row">{vol_html}{cum_html}</div>
           <div class="streak-wrap">{streaks_html}</div>
         </div>"""
     return html
@@ -130,10 +143,19 @@ def col_decline(decline_list):
         return "<div class='empty'>해당 종목 없음</div>"
     html = ""
     for s in decline_list[:8]:
-        last_close = s.get("last_close", 0)
-        last_chg   = s.get("last_chg", 0)
+        last_close  = s.get("last_close", 0)
+        last_chg    = s.get("last_chg", 0)
+        vol_ratio   = s.get("vol_ratio", 0.0)
+        cum_pct     = s.get("cum_pct", 0.0)
+
         pills = " ".join([f'<span class="pill pill-down">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
+
+        vol_html = f'<span class="stat-badge stat-vol">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
+        cum_sign = "+" if cum_pct >= 0 else ""
+        cum_color = "#3B6D11" if cum_pct >= 0 else "#A32D2D"
+        cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
+
         streaks_html = ""
         for si, sk in enumerate(s["streaks"]):
             if si > 0:
@@ -161,6 +183,7 @@ def col_decline(decline_list):
             <span class="stock-price">{last_close:,}원</span>
             <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
           </div>
+          <div class="stat-row">{vol_html}{cum_html}</div>
           <div class="streak-wrap">{streaks_html}</div>
         </div>"""
     return html
@@ -379,6 +402,14 @@ def build():
   .pill-warn{{background:#FCEBEB;color:#791F1F;}}
   .pill-safe{{background:#EAF3DE;color:#27500A;}}
   .pill-info{{background:#E6F1FB;color:#0C447C;}}
+  .pill-high{{background:#FFF3CD;color:#856404;border:0.5px solid #FFEAA0;}}
+
+  /* 지표 배지 */
+  .stat-row{{display:flex;gap:5px;margin:3px 0 4px;flex-wrap:wrap;}}
+  .stat-badge{{font-size:9px;font-weight:500;padding:1px 6px;border-radius:4px;white-space:nowrap;}}
+  .stat-vol{{background:#EEF2FF;color:#3730A3;}}
+  .stat-cum{{background:#F5F5F5;}}
+
   .empty{{font-size:12px;color:#bbb;padding:6px 0;}}
   .loading{{font-size:12px;color:#aaa;padding:20px;text-align:center;}}
   .footer{{font-size:11px;color:#ccc;text-align:center;margin-top:24px;
@@ -526,7 +557,12 @@ function fmtKrx(d) {{
 function renderSurge(list) {{
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
   return list.slice(0,8).map(s => {{
-    const pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${{i+1}}구간 ${{sk.days}}일</span>`).join(' ');
+    let pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${{i+1}}구간 ${{sk.days}}일</span>`).join(' ');
+    if (s.is_52w_high) pills += ' <span class="pill pill-high">★신고가</span>';
+    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol">거래량 ${{s.vol_ratio.toFixed(1)}}x</span>` : '';
+    const cumSign = s.cum_pct >= 0 ? '+' : '';
+    const cumColor = s.cum_pct >= 0 ? '#3B6D11' : '#A32D2D';
+    const cumHtml = `<span class="stat-badge stat-cum" style="color:${{cumColor}}">5일누적 ${{cumSign}}${{s.cum_pct.toFixed(1)}}%</span>`;
     let streaks = '';
     s.streaks.forEach((sk, si) => {{
       if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">조정 구간</div><div class="gap-line"></div></div>';
@@ -541,6 +577,7 @@ function renderSurge(list) {{
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${{s.code}}" target="_blank"><span class="stock-name">${{s.name}}</span><span class="stock-code">${{s.code}}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${{pills}}</div></div>
       <div class="stock-row"><span class="stock-vol">거래대금 ${{volFmt(s.last_volume)}}</span><span class="stock-price">${{s.last_close.toLocaleString()}}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${{chgColor}}">${{chgSign}}${{s.last_chg.toFixed(1)}}%</span></div>
+      <div class="stat-row">${{volHtml}}${{cumHtml}}</div>
       <div class="streak-wrap">${{streaks}}</div></div>`;
   }}).join('');
 }}
@@ -549,6 +586,10 @@ function renderDecline(list) {{
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
   return list.slice(0,8).map(s => {{
     const pills = s.streaks.map((sk,i) => `<span class="pill pill-down">${{i+1}}구간 ${{sk.days}}일</span>`).join(' ');
+    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol">거래량 ${{s.vol_ratio.toFixed(1)}}x</span>` : '';
+    const cumSign = s.cum_pct >= 0 ? '+' : '';
+    const cumColor = s.cum_pct >= 0 ? '#3B6D11' : '#A32D2D';
+    const cumHtml = `<span class="stat-badge stat-cum" style="color:${{cumColor}}">5일누적 ${{cumSign}}${{s.cum_pct.toFixed(1)}}%</span>`;
     let streaks = '';
     s.streaks.forEach((sk, si) => {{
       if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">반등 구간</div><div class="gap-line"></div></div>';
@@ -563,6 +604,7 @@ function renderDecline(list) {{
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${{s.code}}" target="_blank"><span class="stock-name">${{s.name}}</span><span class="stock-code">${{s.code}}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${{pills}}</div></div>
       <div class="stock-row"><span class="stock-vol">거래대금 ${{volFmt(s.last_volume)}}</span><span class="stock-price">${{s.last_close.toLocaleString()}}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${{chgColor}}">${{chgSign}}${{s.last_chg.toFixed(1)}}%</span></div>
+      <div class="stat-row">${{volHtml}}${{cumHtml}}</div>
       <div class="streak-wrap">${{streaks}}</div></div>`;
   }}).join('');
 }}

@@ -89,6 +89,33 @@ def get_market_data(n_days=20):
     return stocks
 
 
+def _calc_extra(prices):
+    """거래량 배수(5일평균 대비), 5일 누적 등락률, 52주 신고가 여부 계산"""
+    last = prices[-1]
+
+    # 거래량 배수: 최근 20일(오늘 제외) 평균 대비
+    recent_vols = [p["volume"] for p in prices[:-1] if p["volume"] > 0]
+    if len(recent_vols) >= 5:
+        avg_vol = sum(recent_vols[-20:]) / len(recent_vols[-20:])
+        vol_ratio = round(last["volume"] / avg_vol, 1) if avg_vol > 0 else 0.0
+    else:
+        vol_ratio = 0.0
+
+    # 5일 누적 등락률: 최근 5일 종가 기준 (첫날 대비 마지막날)
+    if len(prices) >= 5:
+        base_close = prices[-5]["close"]
+        cum_pct = round((last["close"] - base_close) / base_close * 100, 1) if base_close > 0 else 0.0
+    else:
+        cum_pct = 0.0
+
+    # 52주 신고가: 수집 데이터(최대 20일) 내 최고가 대비 — 데이터 한계상 "수집기간 신고가"로 표시
+    highs = [p["close"] for p in prices]
+    is_52w_high = last["close"] >= max(highs) if highs else False
+    high_pct = round((last["close"] - max(highs[:-1])) / max(highs[:-1]) * 100, 1) if len(highs) > 1 else 0.0
+
+    return vol_ratio, cum_pct, is_52w_high, high_pct
+
+
 def find_consecutive_surge(stocks, min_days=3, min_pct=10.0):
     result = []
     for code, info in stocks.items():
@@ -115,15 +142,20 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0):
                 i += 1
 
         if streaks:
-            last_price  = prices[-1]
+            last_price = prices[-1]
+            vol_ratio, cum_pct, is_52w_high, high_pct = _calc_extra(prices)
             result.append({
                 "code":        code,
                 "name":        info["name"],
                 "market":      info["market"],
                 "streaks":     streaks,
                 "last_volume": last_price["volume"],
-                "last_close":  last_price["close"],   # ← 전일 종가 추가
-                "last_chg":    last_price["chg_pct"], # ← 전일 등락률 추가
+                "last_close":  last_price["close"],
+                "last_chg":    last_price["chg_pct"],
+                "vol_ratio":   vol_ratio,   # 거래량 배수
+                "cum_pct":     cum_pct,     # 5일 누적 등락률
+                "is_52w_high": is_52w_high, # 신고가 여부
+                "high_pct":    high_pct,    # 전고점 대비 %
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)
@@ -157,15 +189,20 @@ def find_consecutive_decline(stocks, min_days=5):
                 i += 1
 
         if streaks:
-            last_price  = prices[-1]
+            last_price = prices[-1]
+            vol_ratio, cum_pct, is_52w_high, high_pct = _calc_extra(prices)
             result.append({
                 "code":        code,
                 "name":        info["name"],
                 "market":      info["market"],
                 "streaks":     streaks,
                 "last_volume": last_price["volume"],
-                "last_close":  last_price["close"],   # ← 전일 종가 추가
-                "last_chg":    last_price["chg_pct"], # ← 전일 등락률 추가
+                "last_close":  last_price["close"],
+                "last_chg":    last_price["chg_pct"],
+                "vol_ratio":   vol_ratio,   # 거래량 배수
+                "cum_pct":     cum_pct,     # 5일 누적 등락률
+                "is_52w_high": is_52w_high, # 신고가 여부
+                "high_pct":    high_pct,    # 전고점 대비 %
             })
 
     result.sort(key=lambda x: x["last_volume"], reverse=True)
