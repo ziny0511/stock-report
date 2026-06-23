@@ -98,12 +98,14 @@ def col_surge(surge_list):
         pills = " ".join([f'<span class="pill pill-up">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
         if is_52w_high:
-            pills += ' <span class="pill pill-high">★신고가</span>'
+            pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.\n신고가 돌파 + 연속 상승은\n가장 강한 매수 신호 중 하나.">★신고가</span>'
 
-        vol_html = f'<span class="stat-badge stat-vol">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
+        vol_tip = "최근 20일 평균 거래량 대비 배수.\n2x 이상이면 평소보다 거래가 몰린 것.\n거래량 없는 상승은 신뢰도 낮음."
+        vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
         cum_sign = "+" if cum_pct >= 0 else ""
         cum_color = "#3B6D11" if cum_pct >= 0 else "#A32D2D"
-        cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
+        cum_tip = "5영업일 전 종가 대비 현재까지의\n누적 등락률. 연속 상승 강도를\n한눈에 파악하는 지표."
+        cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}" data-tip="{cum_tip}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
 
         streaks_html = ""
         for si, sk in enumerate(s["streaks"]):
@@ -151,10 +153,12 @@ def col_decline(decline_list):
         pills = " ".join([f'<span class="pill pill-down">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
 
-        vol_html = f'<span class="stat-badge stat-vol">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
+        vol_tip = "최근 20일 평균 거래량 대비 배수.\n2x 이상이면 손절 매물이 쏟아지는 신호.\n거래량 동반 급락은 추가 하락 위험."
+        vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
         cum_sign = "+" if cum_pct >= 0 else ""
         cum_color = "#3B6D11" if cum_pct >= 0 else "#A32D2D"
-        cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
+        cum_tip = "5영업일 전 종가 대비 현재까지의\n누적 등락률. 총 낙폭 규모를\n한눈에 파악하는 지표."
+        cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}" data-tip="{cum_tip}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
 
         streaks_html = ""
         for si, sk in enumerate(s["streaks"]):
@@ -419,9 +423,27 @@ def build():
 
   /* 지표 배지 */
   .stat-row{{display:flex;gap:5px;margin:3px 0 4px;flex-wrap:wrap;}}
-  .stat-badge{{font-size:9px;font-weight:500;padding:1px 6px;border-radius:4px;white-space:nowrap;}}
+  .stat-badge{{font-size:9px;font-weight:500;padding:1px 6px;border-radius:4px;white-space:nowrap;
+               position:relative;cursor:default;}}
   .stat-vol{{background:#EEF2FF;color:#3730A3;}}
   .stat-cum{{background:#F5F5F5;}}
+
+  /* 툴팁 */
+  [data-tip]{{position:relative;}}
+  [data-tip]::after{{
+    content: attr(data-tip);
+    position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+    background:#1a1a1a;color:#fff;font-size:10px;font-weight:400;line-height:1.5;
+    padding:6px 9px;border-radius:6px;white-space:pre;pointer-events:none;
+    opacity:0;transition:opacity .15s;z-index:99;min-width:160px;text-align:left;
+    box-shadow:0 2px 8px rgba(0,0,0,.18);
+  }}
+  [data-tip]::before{{
+    content:'';position:absolute;bottom:calc(100% + 1px);left:50%;transform:translateX(-50%);
+    border:5px solid transparent;border-top-color:#1a1a1a;pointer-events:none;
+    opacity:0;transition:opacity .15s;z-index:99;
+  }}
+  [data-tip]:hover::after,[data-tip]:hover::before{{opacity:1;}}
 
   /* 기간 탭 */
   .window-tabs{{display:flex;gap:5px;margin-bottom:14px;}}
@@ -599,11 +621,13 @@ function renderSurge(list) {{
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
   return list.slice(0,8).map(s => {{
     let pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${{i+1}}구간 ${{sk.days}}일</span>`).join(' ');
-    if (s.is_52w_high) pills += ' <span class="pill pill-high">★신고가</span>';
-    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol">거래량 ${{s.vol_ratio.toFixed(1)}}x</span>` : '';
+    if (s.is_52w_high) pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.&#10;신고가 돌파 + 연속 상승은&#10;가장 강한 매수 신호 중 하나.">★신고가</span>';
+    const volTip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 평소보다 거래가 몰린 것.&#10;거래량 없는 상승은 신뢰도 낮음.";
+    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol" data-tip="${{volTip}}">거래량 ${{s.vol_ratio.toFixed(1)}}x</span>` : '';
     const cumSign = s.cum_pct >= 0 ? '+' : '';
     const cumColor = s.cum_pct >= 0 ? '#3B6D11' : '#A32D2D';
-    const cumHtml = `<span class="stat-badge stat-cum" style="color:${{cumColor}}">5일누적 ${{cumSign}}${{s.cum_pct.toFixed(1)}}%</span>`;
+    const cumTip = "5영업일 전 종가 대비 현재까지의&#10;누적 등락률. 연속 상승 강도를&#10;한눈에 파악하는 지표.";
+    const cumHtml = `<span class="stat-badge stat-cum" style="color:${{cumColor}}" data-tip="${{cumTip}}">5일누적 ${{cumSign}}${{s.cum_pct.toFixed(1)}}%</span>`;
     let streaks = '';
     s.streaks.forEach((sk, si) => {{
       if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">조정 구간</div><div class="gap-line"></div></div>';
@@ -627,10 +651,12 @@ function renderDecline(list) {{
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
   return list.slice(0,8).map(s => {{
     const pills = s.streaks.map((sk,i) => `<span class="pill pill-down">${{i+1}}구간 ${{sk.days}}일</span>`).join(' ');
-    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol">거래량 ${{s.vol_ratio.toFixed(1)}}x</span>` : '';
+    const volTip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 손절 매물이 쏟아지는 신호.&#10;거래량 동반 급락은 추가 하락 위험.";
+    const volHtml = (s.vol_ratio >= 2) ? `<span class="stat-badge stat-vol" data-tip="${{volTip}}">거래량 ${{s.vol_ratio.toFixed(1)}}x</span>` : '';
     const cumSign = s.cum_pct >= 0 ? '+' : '';
     const cumColor = s.cum_pct >= 0 ? '#3B6D11' : '#A32D2D';
-    const cumHtml = `<span class="stat-badge stat-cum" style="color:${{cumColor}}">5일누적 ${{cumSign}}${{s.cum_pct.toFixed(1)}}%</span>`;
+    const cumTip = "5영업일 전 종가 대비 현재까지의&#10;누적 등락률. 총 낙폭 규모를&#10;한눈에 파악하는 지표.";
+    const cumHtml = `<span class="stat-badge stat-cum" style="color:${{cumColor}}" data-tip="${{cumTip}}">5일누적 ${{cumSign}}${{s.cum_pct.toFixed(1)}}%</span>`;
     let streaks = '';
     s.streaks.forEach((sk, si) => {{
       if (si > 0) streaks += '<div class="gap-row"><div class="gap-line"></div><div class="gap-text">반등 구간</div><div class="gap-line"></div></div>';
