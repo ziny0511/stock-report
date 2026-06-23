@@ -98,13 +98,13 @@ def col_surge(surge_list):
         pills = " ".join([f'<span class="pill pill-up">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
         if is_52w_high:
-            pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.\n신고가 돌파 + 연속 상승은\n가장 강한 매수 신호 중 하나.">★신고가</span>'
+            pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.&#10;신고가 돌파 + 연속 상승은&#10;가장 강한 매수 신호 중 하나.">★신고가</span>'
 
-        vol_tip = "최근 20일 평균 거래량 대비 배수.\n2x 이상이면 평소보다 거래가 몰린 것.\n거래량 없는 상승은 신뢰도 낮음."
+        vol_tip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 평소보다 거래가 몰린 것.&#10;거래량 없는 상승은 신뢰도 낮음."
         vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
         cum_sign = "+" if cum_pct >= 0 else ""
         cum_color = "#3B6D11" if cum_pct >= 0 else "#A32D2D"
-        cum_tip = "5영업일 전 종가 대비 현재까지의\n누적 등락률. 연속 상승 강도를\n한눈에 파악하는 지표."
+        cum_tip = "5영업일 전 종가 대비 현재까지의&#10;누적 등락률. 연속 상승 강도를&#10;한눈에 파악하는 지표."
         cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}" data-tip="{cum_tip}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
 
         streaks_html = ""
@@ -153,11 +153,11 @@ def col_decline(decline_list):
         pills = " ".join([f'<span class="pill pill-down">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
 
-        vol_tip = "최근 20일 평균 거래량 대비 배수.\n2x 이상이면 손절 매물이 쏟아지는 신호.\n거래량 동반 급락은 추가 하락 위험."
+        vol_tip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 손절 매물이 쏟아지는 신호.&#10;거래량 동반 급락은 추가 하락 위험."
         vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
         cum_sign = "+" if cum_pct >= 0 else ""
         cum_color = "#3B6D11" if cum_pct >= 0 else "#A32D2D"
-        cum_tip = "5영업일 전 종가 대비 현재까지의\n누적 등락률. 총 낙폭 규모를\n한눈에 파악하는 지표."
+        cum_tip = "5영업일 전 종가 대비 현재까지의&#10;누적 등락률. 총 낙폭 규모를&#10;한눈에 파악하는 지표."
         cum_html = f'<span class="stat-badge stat-cum" style="color:{cum_color}" data-tip="{cum_tip}">5일누적 {cum_sign}{cum_pct:.1f}%</span>'
 
         streaks_html = ""
