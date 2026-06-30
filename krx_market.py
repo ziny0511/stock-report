@@ -182,7 +182,7 @@ def _calc_extra(prices, full_prices=None):
     is_52w_high = high_pct >= -3.0 if all_closes else False
     is_52w_low  = low_pct  <=  3.0 if all_closes else False
 
-    return vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low
+    return vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low, low_pct
 
 
 def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
@@ -212,7 +212,7 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
 
         if streaks:
             last_price = prices[-1]
-            vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low = _calc_extra(prices, info["prices"])
+            vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low, low_pct = _calc_extra(prices, info["prices"])
             result.append({
                 "code":        code,
                 "name":        info["name"],
@@ -263,7 +263,7 @@ def find_consecutive_decline(stocks, min_days=5, window_days=22):
 
         if streaks:
             last_price = prices[-1]
-            vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low = _calc_extra(prices, info["prices"])
+            vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low, low_pct = _calc_extra(prices, info["prices"])
             result.append({
                 "code":        code,
                 "name":        info["name"],
