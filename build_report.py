@@ -97,6 +97,8 @@ def col_surge(surge_list):
         is_52w_low  = s.get("is_52w_low", False)
         w52_high    = s.get("w52_high", 0)
         w52_low     = s.get("w52_low", 0)
+        high_pct    = s.get("high_pct", 0.0)
+        low_pct     = s.get("low_pct", 0.0)
 
         pills = " ".join([f'<span class="pill pill-up">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
@@ -172,6 +174,8 @@ def col_decline(decline_list):
         is_52w_low  = s.get("is_52w_low", False)
         w52_high    = s.get("w52_high", 0)
         w52_low     = s.get("w52_low", 0)
+        high_pct    = s.get("high_pct", 0.0)
+        low_pct     = s.get("low_pct", 0.0)
 
         pills = " ".join([f'<span class="pill pill-down">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
