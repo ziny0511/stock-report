@@ -176,11 +176,10 @@ def _calc_extra(prices, full_prices=None):
     all_closes = [p["close"] for p in fp]
     w52_high = max(all_closes) if all_closes else 0
     w52_low  = min(all_closes) if all_closes else 0
-    # 고가 대비 -3% 이내 → 신고가 근접, 저가 대비 +3% 이내 → 신저가 근접
     high_pct = round((last["close"] - w52_high) / w52_high * 100, 1) if w52_high > 0 else 0.0
     low_pct  = round((last["close"] - w52_low)  / w52_low  * 100, 1) if w52_low  > 0 else 0.0
-    is_52w_high = high_pct >= -3.0 if all_closes else False
-    is_52w_low  = low_pct  <=  3.0 if all_closes else False
+    is_52w_high = True   # 항상 표시 (배지 색으로 근접도 구분)
+    is_52w_low  = False  # 신고가 우선; 신저가는 고가 정보가 없을 때만
 
     return vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low, low_pct
 
