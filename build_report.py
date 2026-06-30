@@ -94,11 +94,20 @@ def col_surge(surge_list):
         vol_ratio   = s.get("vol_ratio", 0.0)
         cum_pct     = s.get("cum_pct", 0.0)
         is_52w_high = s.get("is_52w_high", False)
+        is_52w_low  = s.get("is_52w_low", False)
+        w52_high    = s.get("w52_high", 0)
+        w52_low     = s.get("w52_low", 0)
 
         pills = " ".join([f'<span class="pill pill-up">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
         if is_52w_high:
             pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.&#10;신고가 돌파 + 연속 상승은&#10;가장 강한 매수 신호 중 하나.">★신고가</span>'
+
+        w52_badge = ""
+        if is_52w_high:
+            w52_badge = f'<span class="pill pill-52h" data-tip="52주 신고가 ({w52_high:,}원)">▲52주고가</span>'
+        elif is_52w_low:
+            w52_badge = f'<span class="pill pill-52l" data-tip="52주 신저가 ({w52_low:,}원)">▼52주저가</span>'
 
         vol_tip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 평소보다 거래가 몰린 것.&#10;거래량 없는 상승은 신뢰도 낮음."
         vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
@@ -131,8 +140,11 @@ def col_surge(surge_list):
           </div>
           <div class="stock-row">
             <span class="stock-vol">거래대금 {vol_fmt(s['last_volume'])}</span>
-            <span class="stock-price">{last_close:,}원</span>
-            <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="stock-price">{last_close:,}원</span>
+              <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
+              {w52_badge}
+            </span>
           </div>
           <div class="stat-row">{vol_html}{cum_html}</div>
           <div class="streak-wrap">{streaks_html}</div>
@@ -149,9 +161,19 @@ def col_decline(decline_list):
         last_chg    = s.get("last_chg", 0)
         vol_ratio   = s.get("vol_ratio", 0.0)
         cum_pct     = s.get("cum_pct", 0.0)
+        is_52w_high = s.get("is_52w_high", False)
+        is_52w_low  = s.get("is_52w_low", False)
+        w52_high    = s.get("w52_high", 0)
+        w52_low     = s.get("w52_low", 0)
 
         pills = " ".join([f'<span class="pill pill-down">{i+1}구간 {sk["days"]}일</span>'
                           for i, sk in enumerate(s["streaks"])])
+
+        w52_badge = ""
+        if is_52w_high:
+            w52_badge = f'<span class="pill pill-52h" data-tip="52주 신고가 ({w52_high:,}원)">▲52주고가</span>'
+        elif is_52w_low:
+            w52_badge = f'<span class="pill pill-52l" data-tip="52주 신저가 ({w52_low:,}원)">▼52주저가</span>'
 
         vol_tip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 손절 매물이 쏟아지는 신호.&#10;거래량 동반 급락은 추가 하락 위험."
         vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
@@ -184,8 +206,11 @@ def col_decline(decline_list):
           </div>
           <div class="stock-row">
             <span class="stock-vol">거래대금 {vol_fmt(s['last_volume'])}</span>
-            <span class="stock-price">{last_close:,}원</span>
-            <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
+            <span style="display:flex;align-items:center;gap:4px">
+              <span class="stock-price">{last_close:,}원</span>
+              <span class="stock-chg" style="font-size:10px;font-weight:500;color:{"#3B6D11" if last_chg>=0 else "#A32D2D"}">{("+" if last_chg>=0 else "")}{last_chg:.1f}%</span>
+              {w52_badge}
+            </span>
           </div>
           <div class="stat-row">{vol_html}{cum_html}</div>
           <div class="streak-wrap">{streaks_html}</div>
@@ -420,6 +445,8 @@ def build():
   .pill-safe{{background:#EAF3DE;color:#27500A;}}
   .pill-info{{background:#E6F1FB;color:#0C447C;}}
   .pill-high{{background:#FFF3CD;color:#856404;border:0.5px solid #FFEAA0;}}
+  .pill-52h{{background:#FFF3CD;color:#856404;border:0.5px solid #FFEAA0;font-size:9px;}}
+  .pill-52l{{background:#EEF2FF;color:#3730A3;border:0.5px solid #C7D2FE;font-size:9px;}}
 
   /* 지표 배지 */
   .stat-row{{display:flex;gap:5px;margin:3px 0 4px;flex-wrap:wrap;}}
@@ -642,10 +669,15 @@ function renderSurge(list) {{
     }});
     const chgColor = s.last_chg >= 0 ? '#3B6D11' : '#A32D2D';
     const chgSign = s.last_chg >= 0 ? '+' : '';
+    const w52Badge = s.is_52w_high
+      ? `<span class="pill pill-52h" data-tip="52주 신고가 (${{(s.w52_high||0).toLocaleString()}}원)">▲52주고가</span>`
+      : s.is_52w_low
+      ? `<span class="pill pill-52l" data-tip="52주 신저가 (${{(s.w52_low||0).toLocaleString()}}원)">▼52주저가</span>`
+      : '';
     return `<div class="stock-item">
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${{s.code}}" target="_blank"><span class="stock-name">${{s.name}}</span><span class="stock-code">${{s.code}}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${{pills}}</div></div>
-      <div class="stock-row"><span class="stock-vol">거래대금 ${{volFmt(s.last_volume)}}</span><span class="stock-price">${{s.last_close.toLocaleString()}}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${{chgColor}}">${{chgSign}}${{s.last_chg.toFixed(1)}}%</span></div>
+      <div class="stock-row"><span class="stock-vol">거래대금 ${{volFmt(s.last_volume)}}</span><span style="display:flex;align-items:center;gap:4px"><span class="stock-price">${{s.last_close.toLocaleString()}}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${{chgColor}}">${{chgSign}}${{s.last_chg.toFixed(1)}}%</span>${{w52Badge}}</span></div>
       <div class="stat-row">${{volHtml}}${{cumHtml}}</div>
       <div class="streak-wrap">${{streaks}}</div></div>`;
   }}).join('');
@@ -671,10 +703,15 @@ function renderDecline(list) {{
     }});
     const chgColor = s.last_chg >= 0 ? '#3B6D11' : '#A32D2D';
     const chgSign = s.last_chg >= 0 ? '+' : '';
+    const w52Badge = s.is_52w_high
+      ? `<span class="pill pill-52h" data-tip="52주 신고가 (${{(s.w52_high||0).toLocaleString()}}원)">▲52주고가</span>`
+      : s.is_52w_low
+      ? `<span class="pill pill-52l" data-tip="52주 신저가 (${{(s.w52_low||0).toLocaleString()}}원)">▼52주저가</span>`
+      : '';
     return `<div class="stock-item">
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${{s.code}}" target="_blank"><span class="stock-name">${{s.name}}</span><span class="stock-code">${{s.code}}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${{pills}}</div></div>
-      <div class="stock-row"><span class="stock-vol">거래대금 ${{volFmt(s.last_volume)}}</span><span class="stock-price">${{s.last_close.toLocaleString()}}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${{chgColor}}">${{chgSign}}${{s.last_chg.toFixed(1)}}%</span></div>
+      <div class="stock-row"><span class="stock-vol">거래대금 ${{volFmt(s.last_volume)}}</span><span style="display:flex;align-items:center;gap:4px"><span class="stock-price">${{s.last_close.toLocaleString()}}원</span><span class="stock-chg" style="font-size:10px;font-weight:500;color:${{chgColor}}">${{chgSign}}${{s.last_chg.toFixed(1)}}%</span>${{w52Badge}}</span></div>
       <div class="stat-row">${{volHtml}}${{cumHtml}}</div>
       <div class="streak-wrap">${{streaks}}</div></div>`;
   }}).join('');

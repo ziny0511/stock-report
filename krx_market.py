@@ -151,8 +151,13 @@ def get_market_data(n_days=260):
     return stocks
 
 
-def _calc_extra(prices):
+def _calc_extra(prices, full_prices=None):
+    """
+    prices      : 기간 필터링된 가격 (streak 탐지용)
+    full_prices : 전체 260일 가격 (52주 고/저가 계산용)
+    """
     last = prices[-1]
+    fp = full_prices if full_prices is not None else prices
 
     recent_vols = [p["volume"] for p in prices[:-1] if p["volume"] > 0]
     if len(recent_vols) >= 5:
@@ -167,11 +172,15 @@ def _calc_extra(prices):
     else:
         cum_pct = 0.0
 
-    highs = [p["close"] for p in prices]
-    is_52w_high = last["close"] >= max(highs) if highs else False
-    high_pct = round((last["close"] - max(highs[:-1])) / max(highs[:-1]) * 100, 1) if len(highs) > 1 else 0.0
+    # 52주 신고가 / 신저가 (전체 260일 기준)
+    all_closes = [p["close"] for p in fp]
+    w52_high = max(all_closes) if all_closes else 0
+    w52_low  = min(all_closes) if all_closes else 0
+    is_52w_high = (last["close"] >= w52_high) if all_closes else False
+    is_52w_low  = (last["close"] <= w52_low)  if all_closes else False
+    high_pct = round((last["close"] - w52_high) / w52_high * 100, 1) if w52_high > 0 else 0.0
 
-    return vol_ratio, cum_pct, is_52w_high, high_pct
+    return vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low
 
 
 def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
@@ -201,7 +210,7 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
 
         if streaks:
             last_price = prices[-1]
-            vol_ratio, cum_pct, is_52w_high, high_pct = _calc_extra(prices)
+            vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low = _calc_extra(prices, info["prices"])
             result.append({
                 "code":        code,
                 "name":        info["name"],
@@ -213,6 +222,9 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
                 "vol_ratio":   vol_ratio,
                 "cum_pct":     cum_pct,
                 "is_52w_high": is_52w_high,
+                "is_52w_low":  is_52w_low,
+                "w52_high":    w52_high,
+                "w52_low":     w52_low,
                 "high_pct":    high_pct,
             })
 
@@ -248,7 +260,7 @@ def find_consecutive_decline(stocks, min_days=5, window_days=22):
 
         if streaks:
             last_price = prices[-1]
-            vol_ratio, cum_pct, is_52w_high, high_pct = _calc_extra(prices)
+            vol_ratio, cum_pct, is_52w_high, high_pct, is_52w_low, w52_high, w52_low = _calc_extra(prices, info["prices"])
             result.append({
                 "code":        code,
                 "name":        info["name"],
@@ -260,6 +272,9 @@ def find_consecutive_decline(stocks, min_days=5, window_days=22):
                 "vol_ratio":   vol_ratio,
                 "cum_pct":     cum_pct,
                 "is_52w_high": is_52w_high,
+                "is_52w_low":  is_52w_low,
+                "w52_high":    w52_high,
+                "w52_low":     w52_low,
                 "high_pct":    high_pct,
             })
 
