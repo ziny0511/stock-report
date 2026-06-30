@@ -105,18 +105,24 @@ def col_surge(surge_list):
         if is_52w_high:
             pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.&#10;신고가 돌파 + 연속 상승은&#10;가장 강한 매수 신호 중 하나.">★신고가</span>'
 
-        # 52주 고가 배지: 항상 표시, 근접도에 따라 색 구분
+        # 52주 고가 배지
         if high_pct >= 0:
-            w52_label = "★52주고가"
-            w52_cls   = "pill-52h"
+            h_label, h_cls = "★52주고가", "pill-52h"
         elif high_pct >= -5:
-            w52_label = f"52H {high_pct:.1f}%"
-            w52_cls   = "pill-52h-near"
+            h_label, h_cls = f"52H {high_pct:.1f}%", "pill-52h-near"
         else:
-            w52_label = f"52H {high_pct:.1f}%"
-            w52_cls   = "pill-52h-far"
-        w52_tip = f"52주 최고가: {w52_high:,}원 ({high_pct:+.1f}%)&#10;52주 최저가: {w52_low:,}원 ({low_pct:+.1f}%)"
-        w52_badge = f'<span class="pill {w52_cls}" data-tip="{w52_tip}">{w52_label}</span>'
+            h_label, h_cls = f"52H {high_pct:.1f}%", "pill-52h-far"
+        h_tip = f"52주 최고가: {w52_high:,}원&#10;현재가 대비 {high_pct:+.1f}%"
+        # 52주 저가 배지
+        if low_pct <= 0:
+            l_label, l_cls = "★52주저가", "pill-52l"
+        elif low_pct <= 5:
+            l_label, l_cls = f"52L +{low_pct:.1f}%", "pill-52l-near"
+        else:
+            l_label, l_cls = f"52L +{low_pct:.1f}%", "pill-52l-far"
+        l_tip = f"52주 최저가: {w52_low:,}원&#10;현재가 대비 +{low_pct:.1f}%"
+        w52_badge = (f'<span class="pill {h_cls}" data-tip="{h_tip}">{h_label}</span>'
+                     f'<span class="pill {l_cls}" data-tip="{l_tip}">{l_label}</span>')
 
         vol_tip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 평소보다 거래가 몰린 것.&#10;거래량 없는 상승은 신뢰도 낮음."
         vol_html = f'<span class="stat-badge stat-vol" data-tip="{vol_tip}">거래량 {vol_ratio:.1f}x</span>' if vol_ratio >= 2 else ""
@@ -464,6 +470,8 @@ def build():
   .pill-52h-near{{background:#FFF8E6;color:#B45309;border:0.5px solid #FDE68A;font-size:9px;}}
   .pill-52h-far{{background:#F5F5F5;color:#888;border:0.5px solid #E0E0E0;font-size:9px;}}
   .pill-52l{{background:#EEF2FF;color:#3730A3;border:0.5px solid #C7D2FE;font-size:9px;}}
+  .pill-52l-near{{background:#F5F3FF;color:#6D28D9;border:0.5px solid #DDD6FE;font-size:9px;}}
+  .pill-52l-far{{background:#F5F5F5;color:#888;border:0.5px solid #E0E0E0;font-size:9px;}}
 
   /* 지표 배지 */
   .stat-row{{display:flex;gap:5px;margin:3px 0 4px;flex-wrap:wrap;}}
@@ -686,12 +694,14 @@ function renderSurge(list) {{
     }});
     const chgColor = s.last_chg >= 0 ? '#3B6D11' : '#A32D2D';
     const chgSign = s.last_chg >= 0 ? '+' : '';
-    const hp = s.high_pct || 0;
-    const lp = s.low_pct  || 0;
-    const w52Cls = hp >= 0 ? 'pill-52h' : hp >= -5 ? 'pill-52h-near' : 'pill-52h-far';
-    const w52Label = hp >= 0 ? '★52주고가' : `52H ${{hp.toFixed(1)}}%`;
-    const w52Tip = `52주 최고가: ${{(s.w52_high||0).toLocaleString()}}원 (${{hp >= 0 ? '+' : ''}}${{hp.toFixed(1)}}%)&#10;52주 최저가: ${{(s.w52_low||0).toLocaleString()}}원 (+${{lp.toFixed(1)}}%)`;
-    const w52Badge = `<span class="pill ${{w52Cls}}" data-tip="${{w52Tip}}">${{w52Label}}</span>`;
+    const hp = s.high_pct || 0; const lp = s.low_pct || 0;
+    const hCls = hp >= 0 ? 'pill-52h' : hp >= -5 ? 'pill-52h-near' : 'pill-52h-far';
+    const hLabel = hp >= 0 ? '★52주고가' : `52H ${{hp.toFixed(1)}}%`;
+    const hTip = `52주 최고가: ${{(s.w52_high||0).toLocaleString()}}원&#10;현재가 대비 ${{hp >= 0?'+':''}}${{hp.toFixed(1)}}%`;
+    const lCls = lp <= 0 ? 'pill-52l' : lp <= 5 ? 'pill-52l-near' : 'pill-52l-far';
+    const lLabel = lp <= 0 ? '★52주저가' : `52L +${{lp.toFixed(1)}}%`;
+    const lTip = `52주 최저가: ${{(s.w52_low||0).toLocaleString()}}원&#10;현재가 대비 +${{lp.toFixed(1)}}%`;
+    const w52Badge = `<span class="pill ${{hCls}}" data-tip="${{hTip}}">${{hLabel}}</span><span class="pill ${{lCls}}" data-tip="${{lTip}}">${{lLabel}}</span>`;
     return `<div class="stock-item">
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${{s.code}}" target="_blank"><span class="stock-name">${{s.name}}</span><span class="stock-code">${{s.code}}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${{pills}}</div></div>
@@ -721,12 +731,14 @@ function renderDecline(list) {{
     }});
     const chgColor = s.last_chg >= 0 ? '#3B6D11' : '#A32D2D';
     const chgSign = s.last_chg >= 0 ? '+' : '';
-    const hp2 = s.high_pct || 0;
-    const lp2 = s.low_pct  || 0;
-    const w52Cls2 = hp2 >= 0 ? 'pill-52h' : hp2 >= -5 ? 'pill-52h-near' : 'pill-52h-far';
-    const w52Label2 = hp2 >= 0 ? '★52주고가' : `52H ${{hp2.toFixed(1)}}%`;
-    const w52Tip2 = `52주 최고가: ${{(s.w52_high||0).toLocaleString()}}원 (${{hp2 >= 0 ? '+' : ''}}${{hp2.toFixed(1)}}%)&#10;52주 최저가: ${{(s.w52_low||0).toLocaleString()}}원 (+${{lp2.toFixed(1)}}%)`;
-    const w52Badge = `<span class="pill ${{w52Cls2}}" data-tip="${{w52Tip2}}">${{w52Label2}}</span>`;
+    const hp2 = s.high_pct || 0; const lp2 = s.low_pct || 0;
+    const hCls2 = hp2 >= 0 ? 'pill-52h' : hp2 >= -5 ? 'pill-52h-near' : 'pill-52h-far';
+    const hLabel2 = hp2 >= 0 ? '★52주고가' : `52H ${{hp2.toFixed(1)}}%`;
+    const hTip2 = `52주 최고가: ${{(s.w52_high||0).toLocaleString()}}원&#10;현재가 대비 ${{hp2 >= 0?'+':''}}${{hp2.toFixed(1)}}%`;
+    const lCls2 = lp2 <= 0 ? 'pill-52l' : lp2 <= 5 ? 'pill-52l-near' : 'pill-52l-far';
+    const lLabel2 = lp2 <= 0 ? '★52주저가' : `52L +${{lp2.toFixed(1)}}%`;
+    const lTip2 = `52주 최저가: ${{(s.w52_low||0).toLocaleString()}}원&#10;현재가 대비 +${{lp2.toFixed(1)}}%`;
+    const w52Badge = `<span class="pill ${{hCls2}}" data-tip="${{hTip2}}">${{hLabel2}}</span><span class="pill ${{lCls2}}" data-tip="${{lTip2}}">${{lLabel2}}</span>`;
     return `<div class="stock-item">
       <div class="stock-row"><div><a class="stock-link" href="https://finance.naver.com/item/main.naver?code=${{s.code}}" target="_blank"><span class="stock-name">${{s.name}}</span><span class="stock-code">${{s.code}}</span></a></div>
       <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:flex-end">${{pills}}</div></div>
