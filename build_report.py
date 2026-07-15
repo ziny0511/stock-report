@@ -84,11 +84,12 @@ def make_chart_html(corp_name, prices, chart_id, color):
     }})();</script>"""
 
 # ── ① 연속 상승 컬럼 ────────────────────────────────────────
-def col_surge(surge_list):
-    if not surge_list:
+def _surge_items(lst, limit=6):
+    """surge_list에서 limit개만큼 종목 카드 HTML 생성"""
+    if not lst:
         return "<div class='empty'>해당 종목 없음</div>"
     html = ""
-    for s in surge_list[:8]:
+    for s in lst[:limit]:
         last_close  = s.get("last_close", 0)
         last_chg    = s.get("last_chg", 0)
         vol_ratio   = s.get("vol_ratio", 0.0)
@@ -165,6 +166,15 @@ def col_surge(surge_list):
           <div class="streak-wrap">{streaks_html}</div>
         </div>"""
     return html
+
+def col_surge(surge_a, surge_b):
+    return f"""
+    <div class="surge-sub-label">📈 5% 이상 × 5일 연속</div>
+    {_surge_items(surge_a, 5)}
+    <div class="surge-divider"></div>
+    <div class="surge-sub-label">📊 순양봉 10일 이상 연속</div>
+    {_surge_items(surge_b, 5)}
+    """
 
 # ── ② 연속 하락 컬럼 ────────────────────────────────────────
 def col_decline(decline_list):
@@ -303,20 +313,21 @@ def build():
     windows_data = {}
     for wkey, wdays in WINDOW_DAYS.items():
         windows_data[wkey] = {
-            "surge_list":   find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=wdays),
+            "surge_a":    find_consecutive_surge(stocks, min_days=5,  min_pct=5.0, window_days=wdays),   # 5%×5일
+            "surge_b":    find_consecutive_surge(stocks, min_days=10, min_pct=0,   window_days=wdays),   # 순양봉 10일↑
             "decline_list": find_consecutive_decline(stocks, min_days=5, window_days=wdays),
             "top_up":       top_up,
             "top_down":     top_down,
         }
 
-    # 기본 표시는 1개월
-    surge_list   = windows_data["1m"]["surge_list"]
+    surge_a      = windows_data["1m"]["surge_a"]
+    surge_b      = windows_data["1m"]["surge_b"]
     decline_list = windows_data["1m"]["decline_list"]
 
     print("=== 공시 수집 ===")
     disc = fetch_all(days=1)
 
-    surge_html   = col_surge(surge_list)
+    surge_html   = col_surge(surge_a, surge_b)
     decline_html = col_decline(decline_list)
     top10_html   = col_top10(top_up, top_down)
     windows_json = json.dumps(windows_data, ensure_ascii=False)
@@ -342,8 +353,8 @@ def build():
         "date_str": today_str,
         "time_str": time_str,
         "windows":  windows_data,
-        # 하위호환: 1m 기본값 유지
-        "surge_list":   surge_list,
+        "surge_a":      surge_a,
+        "surge_b":      surge_b,
         "decline_list": decline_list,
         "top_up":       top_up,
         "top_down":     top_down,
@@ -505,6 +516,9 @@ def build():
   .wtab.active{{background:#185FA5;color:#fff;border-color:#185FA5;}}
   .wtab-label{{font-size:10px;color:#aaa;margin-right:4px;align-self:center;}}
 
+  .surge-sub-label{{font-size:10px;font-weight:600;color:#555;letter-spacing:.04em;
+    padding:5px 0 4px;margin-top:2px;}}
+  .surge-divider{{border-top:1px dashed #e8e8e8;margin:8px 0;}}
   .empty{{font-size:12px;color:#bbb;padding:6px 0;}}
   .loading{{font-size:12px;color:#aaa;padding:20px;text-align:center;}}
   .footer{{font-size:11px;color:#ccc;text-align:center;margin-top:24px;
@@ -590,7 +604,7 @@ function switchWindow(w) {{
   document.querySelectorAll('.wtab').forEach(b => b.classList.toggle('active', b.dataset.w === w));
   const src = WINDOWS_DATA[w] || WINDOWS_DATA['1m'];
   destroyCharts();
-  document.getElementById('market-cols').innerHTML = renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
+  document.getElementById('market-cols').innerHTML = renderThreeCol(src.surge_a, src.surge_b, src.decline_list, src.top_up, src.top_down);
 }}
 
 // 날짜 목록 로드
@@ -650,7 +664,7 @@ async function loadDate(dateKey) {{
 function goToday() {{
   destroyCharts();
   const src = WINDOWS_DATA[currentWindow] || WINDOWS_DATA['1m'];
-  document.getElementById('market-cols').innerHTML = renderThreeCol(src.surge_list, src.decline_list, src.top_up, src.top_down);
+  document.getElementById('market-cols').innerHTML = renderThreeCol(src.surge_a, src.surge_b, src.decline_list, src.top_up, src.top_down);
   document.getElementById('disc-section-wrap').innerHTML = todayDiscContent;
   document.getElementById('history-badge').style.display = 'none';
   document.getElementById('date-select').value = TODAY_KEY;
@@ -673,9 +687,9 @@ function fmtKrx(d) {{
   }} catch(e) {{ return d.slice(4,6)+'/'+d.slice(6,8); }}
 }}
 
-function renderSurge(list) {{
+function renderSurge(list, limit=5) {{
   if (!list || !list.length) return "<div class='empty'>해당 종목 없음</div>";
-  return list.slice(0,8).map(s => {{
+  return list.slice(0,limit).map(s => {{
     let pills = s.streaks.map((sk,i) => `<span class="pill pill-up">${{i+1}}구간 ${{sk.days}}일</span>`).join(' ');
     if (s.is_52w_high) pills += ' <span class="pill pill-high" data-tip="수집 기간 내 최고가 경신.&#10;신고가 돌파 + 연속 상승은&#10;가장 강한 매수 신호 중 하나.">★신고가</span>';
     const volTip = "최근 20일 평균 거래량 대비 배수.&#10;2x 이상이면 평소보다 거래가 몰린 것.&#10;거래량 없는 상승은 신뢰도 낮음.";
@@ -805,10 +819,16 @@ function renderHistoryCharts(d) {{
   }});
 }}
 
-function renderThreeCol(surge_list, decline_list, top_up, top_down) {{
+function renderSurgeSection(surge_a, surge_b) {{
+  return `<div class="surge-sub-label">📈 5% 이상 × 5일 연속</div>${{renderSurge(surge_a, 5)}}
+    <div class="surge-divider"></div>
+    <div class="surge-sub-label">📊 순양봉 10일 이상 연속</div>${{renderSurge(surge_b, 5)}}`;
+}}
+
+function renderThreeCol(surge_a, surge_b, decline_list, top_up, top_down) {{
   return `
     <div class="three-col">
-      <div class="col-panel"><div class="col-title" style="color:#3B6D11"><i>▲</i> ① 3영업일 이상 연속 10% 상승</div>${{renderSurge(surge_list)}}</div>
+      <div class="col-panel"><div class="col-title" style="color:#3B6D11"><i>▲</i> ① 연속 상승</div>${{renderSurgeSection(surge_a, surge_b)}}</div>
       <div class="col-panel"><div class="col-title" style="color:#A32D2D"><i>▼</i> ② 5영업일 이상 연속 하락</div>${{renderDecline(decline_list)}}</div>
       <div class="col-panel"><div class="col-title" style="color:#1a1a1a">③ 전일 상승 / 하락 TOP 10</div>${{renderTop10(top_up, top_down)}}</div>
     </div>`;
@@ -817,7 +837,7 @@ function renderThreeCol(surge_list, decline_list, top_up, top_down) {{
 function renderData(d) {{
   const src = (d.windows && d.windows[currentWindow]) || d;
   return {{
-    market: renderThreeCol(src.surge_list, src.decline_list, src.top_up || d.top_up, src.top_down || d.top_down),
+    market: renderThreeCol(src.surge_a, src.surge_b, src.decline_list, src.top_up || d.top_up, src.top_down || d.top_down),
     disc: `<div class="s-label">④ 전일 주요 공시 — 최근 10영업일 주가 포함</div>
       <div class="disc-grid">
         ${{renderDiscCard(d.disc.warn,     'pill-warn', '희석위험', '#E24B4A', '⚠ 희석 위험 공시',     d.date)}}

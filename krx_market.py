@@ -191,9 +191,12 @@ def find_consecutive_surge(stocks, min_days=3, min_pct=10.0, window_days=22):
         streaks = []
         i = 0
         while i < len(prices):
-            if prices[i]["chg_pct"] >= min_pct:
+            # min_pct=0 이면 순수 양봉(0 초과)만 카운트
+            def _qualifies(p):
+                return p["chg_pct"] > 0 if min_pct == 0 else p["chg_pct"] >= min_pct
+            if _qualifies(prices[i]):
                 j = i
-                while j < len(prices) and prices[j]["chg_pct"] >= min_pct:
+                while j < len(prices) and _qualifies(prices[j]):
                     j += 1
                 if j - i >= min_days:
                     sp = prices[i:j]
