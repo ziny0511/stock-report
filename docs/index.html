@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>국내주식 일일 리포트 — 2026년 08월 16일</title>
+<title>국내주식 일일 리포트 — 2026년 08월 17일</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0;}
@@ -167,11 +167,11 @@
   <div class="report-header">
     <div>
       <div class="report-title">국내주식 일일 리포트</div>
-      <div class="report-meta" id="report-meta">2026년 08월 16일 21:16 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
+      <div class="report-meta" id="report-meta">2026년 08월 17일 21:22 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집</div>
     </div>
     <div class="date-picker-wrap">
       <span class="date-label">날짜 선택</span>
-      <select id="date-select"><option value="2026-08-16">2026년 08월 16일</option></select>
+      <select id="date-select"><option value="2026-08-17">2026년 08월 17일</option></select>
       <button class="today-btn" onclick="goToday()">오늘</button>
     </div>
   </div>
@@ -1207,7 +1207,7 @@
 
 <script>
 const BASE = location.origin + '/stock-report';
-const TODAY_KEY = '2026-08-16';
+const TODAY_KEY = '2026-08-17';
 let todayDiscContent = document.getElementById('disc-section-wrap').innerHTML;
 let chartInstances = [];
 let currentWindow = '1m';
@@ -1283,7 +1283,7 @@ function goToday() {
   document.getElementById('history-badge').style.display = 'none';
   document.getElementById('date-select').value = TODAY_KEY;
   document.getElementById('report-meta').innerHTML =
-    '2026년 08월 16일 21:16 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
+    '2026년 08월 17일 21:22 기준 &nbsp;|&nbsp; KOSPI + KOSDAQ &nbsp;|&nbsp; DART + KRX 자동 수집';
 }
 
 function volFmt(v) {
