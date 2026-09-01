@@ -1,7 +1,7 @@
 {
   "date": "2026-09-01",
   "date_str": "2026년 09월 01일",
-  "time_str": "00:22",
+  "time_str": "22:58",
   "windows": {
     "1m": {
       "surge_a": [
@@ -705582,241 +705582,299 @@
   "disc": {
     "warn": [
       {
-        "corp_name": "아이티센씨티에스",
+        "corp_name": "LG생활건강",
+        "report_nm": "[기재정정]유상증자결정(종속회사의주요경영사항)              ",
+        "rcept_no": "20260901800624",
+        "rcept_dt": "20260901",
+        "prices": [
+          {
+            "date": "08/18",
+            "close": 300000,
+            "change_pct": -2.44
+          },
+          {
+            "date": "08/19",
+            "close": 302000,
+            "change_pct": 0.67
+          },
+          {
+            "date": "08/20",
+            "close": 304500,
+            "change_pct": 0.83
+          },
+          {
+            "date": "08/21",
+            "close": 313000,
+            "change_pct": 2.79
+          },
+          {
+            "date": "08/24",
+            "close": 316000,
+            "change_pct": 0.96
+          },
+          {
+            "date": "08/25",
+            "close": 316000,
+            "change_pct": 0.0
+          },
+          {
+            "date": "08/26",
+            "close": 311000,
+            "change_pct": -1.58
+          },
+          {
+            "date": "08/27",
+            "close": 298500,
+            "change_pct": -4.02
+          },
+          {
+            "date": "08/28",
+            "close": 318000,
+            "change_pct": 6.53
+          },
+          {
+            "date": "08/31",
+            "close": 313000,
+            "change_pct": -1.57
+          }
+        ]
+      },
+      {
+        "corp_name": "한울앤제주",
+        "report_nm": "[기재정정]주요사항보고서(전환사채권발행결정)",
+        "rcept_no": "20260901000309",
+        "rcept_dt": "20260901",
+        "prices": [
+          {
+            "date": "08/18",
+            "close": 11470,
+            "change_pct": 0.0
+          },
+          {
+            "date": "08/19",
+            "close": 11470,
+            "change_pct": 0.0
+          },
+          {
+            "date": "08/20",
+            "close": 11470,
+            "change_pct": 0.0
+          },
+          {
+            "date": "08/21",
+            "close": 1610,
+            "change_pct": -29.85
+          },
+          {
+            "date": "08/24",
+            "close": 1236,
+            "change_pct": -23.23
+          },
+          {
+            "date": "08/25",
+            "close": 1056,
+            "change_pct": -14.56
+          },
+          {
+            "date": "08/26",
+            "close": 1189,
+            "change_pct": 12.59
+          },
+          {
+            "date": "08/27",
+            "close": 1113,
+            "change_pct": -6.39
+          },
+          {
+            "date": "08/28",
+            "close": 1306,
+            "change_pct": 17.34
+          },
+          {
+            "date": "08/31",
+            "close": 1365,
+            "change_pct": 4.52
+          }
+        ]
+      },
+      {
+        "corp_name": "신화프리텍",
         "report_nm": "주요사항보고서(전환사채권발행결정)",
-        "rcept_no": "20260831001414",
-        "rcept_dt": "20260831",
+        "rcept_no": "20260901000319",
+        "rcept_dt": "20260901",
         "prices": [
           {
             "date": "08/18",
-            "close": 5900,
-            "change_pct": -3.12
+            "close": 1952,
+            "change_pct": -1.21
           },
           {
             "date": "08/19",
-            "close": 5770,
-            "change_pct": -2.2
+            "close": 1879,
+            "change_pct": -3.74
           },
           {
             "date": "08/20",
-            "close": 6150,
-            "change_pct": 6.59
+            "close": 1879,
+            "change_pct": 0.0
           },
           {
             "date": "08/21",
-            "close": 6100,
-            "change_pct": -0.81
+            "close": 1828,
+            "change_pct": -2.71
           },
           {
             "date": "08/24",
-            "close": 6200,
-            "change_pct": 1.64
+            "close": 1831,
+            "change_pct": 0.16
           },
           {
             "date": "08/25",
-            "close": 6340,
-            "change_pct": 2.26
+            "close": 1860,
+            "change_pct": 1.58
           },
           {
             "date": "08/26",
-            "close": 6270,
-            "change_pct": -1.1
+            "close": 1880,
+            "change_pct": 1.08
           },
           {
             "date": "08/27",
-            "close": 6150,
-            "change_pct": -1.91
+            "close": 1873,
+            "change_pct": -0.37
           },
           {
             "date": "08/28",
-            "close": 6090,
-            "change_pct": -0.98
+            "close": 1883,
+            "change_pct": 0.53
           },
           {
             "date": "08/31",
-            "close": 5920,
-            "change_pct": -2.79
+            "close": 1881,
+            "change_pct": -0.11
           }
         ]
       },
       {
-        "corp_name": "HD건설기계",
-        "report_nm": "유상증자결정(종속회사의주요경영사항)              ",
-        "rcept_no": "20260831800675",
-        "rcept_dt": "20260831",
+        "corp_name": "한울반도체",
+        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
+        "rcept_no": "20260901000301",
+        "rcept_dt": "20260901",
         "prices": [
           {
             "date": "08/18",
-            "close": 133500,
-            "change_pct": -3.68
+            "close": 10610,
+            "change_pct": -5.69
           },
           {
             "date": "08/19",
-            "close": 129200,
-            "change_pct": -3.22
+            "close": 10270,
+            "change_pct": -3.2
           },
           {
             "date": "08/20",
-            "close": 121900,
-            "change_pct": -5.65
+            "close": 10410,
+            "change_pct": 1.36
           },
           {
             "date": "08/21",
-            "close": 115500,
-            "change_pct": -5.25
+            "close": 9970,
+            "change_pct": -4.23
           },
           {
             "date": "08/24",
-            "close": 127100,
-            "change_pct": 10.04
+            "close": 9390,
+            "change_pct": -5.82
           },
           {
             "date": "08/25",
-            "close": 134800,
-            "change_pct": 6.06
+            "close": 9320,
+            "change_pct": -0.75
           },
           {
             "date": "08/26",
-            "close": 139800,
-            "change_pct": 3.71
+            "close": 9120,
+            "change_pct": -2.15
           },
           {
             "date": "08/27",
-            "close": 140600,
-            "change_pct": 0.57
-          },
-          {
-            "date": "08/28",
-            "close": 136600,
-            "change_pct": -2.84
-          },
-          {
-            "date": "08/31",
-            "close": 133300,
-            "change_pct": -2.42
-          }
-        ]
-      },
-      {
-        "corp_name": "AK홀딩스",
-        "report_nm": "[기재정정]유상증자결정(종속회사의주요경영사항)              ",
-        "rcept_no": "20260831800639",
-        "rcept_dt": "20260831",
-        "prices": [
-          {
-            "date": "08/18",
-            "close": 7160,
-            "change_pct": -2.72
-          },
-          {
-            "date": "08/19",
-            "close": 7340,
-            "change_pct": 2.51
-          },
-          {
-            "date": "08/20",
-            "close": 7700,
-            "change_pct": 4.9
-          },
-          {
-            "date": "08/21",
-            "close": 7700,
-            "change_pct": 0.0
-          },
-          {
-            "date": "08/24",
-            "close": 7690,
-            "change_pct": -0.13
-          },
-          {
-            "date": "08/25",
-            "close": 7700,
-            "change_pct": 0.13
-          },
-          {
-            "date": "08/26",
-            "close": 7690,
-            "change_pct": -0.13
-          },
-          {
-            "date": "08/27",
-            "close": 7690,
-            "change_pct": 0.0
-          },
-          {
-            "date": "08/28",
-            "close": 7550,
-            "change_pct": -1.82
-          },
-          {
-            "date": "08/31",
-            "close": 7500,
+            "close": 9060,
             "change_pct": -0.66
+          },
+          {
+            "date": "08/28",
+            "close": 8930,
+            "change_pct": -1.43
+          },
+          {
+            "date": "08/31",
+            "close": 8850,
+            "change_pct": -0.9
           }
         ]
       },
       {
-        "corp_name": "애경케미칼",
-        "report_nm": "[기재정정]유상증자결정(종속회사의주요경영사항)              ",
-        "rcept_no": "20260831800625",
-        "rcept_dt": "20260831",
+        "corp_name": "핀텔",
+        "report_nm": "주요사항보고서(유상증자결정)",
+        "rcept_no": "20260901000293",
+        "rcept_dt": "20260901",
         "prices": [
           {
             "date": "08/18",
-            "close": 9720,
-            "change_pct": 1.78
+            "close": 1395,
+            "change_pct": 1.45
           },
           {
             "date": "08/19",
-            "close": 9180,
-            "change_pct": -5.56
+            "close": 1339,
+            "change_pct": -4.01
           },
           {
             "date": "08/20",
-            "close": 9400,
-            "change_pct": 2.4
+            "close": 1343,
+            "change_pct": 0.3
           },
           {
             "date": "08/21",
-            "close": 9110,
-            "change_pct": -3.09
+            "close": 1297,
+            "change_pct": -3.43
           },
           {
             "date": "08/24",
-            "close": 9550,
-            "change_pct": 4.83
+            "close": 1298,
+            "change_pct": 0.08
           },
           {
             "date": "08/25",
-            "close": 9800,
-            "change_pct": 2.62
+            "close": 1250,
+            "change_pct": -3.7
           },
           {
             "date": "08/26",
-            "close": 9800,
-            "change_pct": 0.0
+            "close": 1257,
+            "change_pct": 0.56
           },
           {
             "date": "08/27",
-            "close": 10640,
-            "change_pct": 8.57
+            "close": 1212,
+            "change_pct": -3.58
           },
           {
             "date": "08/28",
-            "close": 10200,
-            "change_pct": -4.14
+            "close": 1220,
+            "change_pct": 0.66
           },
           {
             "date": "08/31",
-            "close": 11020,
-            "change_pct": 8.04
+            "close": 1300,
+            "change_pct": 6.56
           }
         ]
       },
       {
         "corp_name": "성호전자",
-        "report_nm": "주요사항보고서(전환사채권발행결정)",
-        "rcept_no": "20260831001545",
+        "report_nm": "기타경영사항(자율공시)              (제14회차 무기명식 이권부 무보증 신주인수권부사채 소각 결정의 건)",
+        "rcept_no": "20260901900534",
         "rcept_dt": "20260901",
         "prices": [
           {
@@ -705872,413 +705930,364 @@
         ]
       },
       {
-        "corp_name": "신테카바이오",
-        "report_nm": "주요사항보고서(유상증자결정)",
-        "rcept_no": "20260831001532",
-        "rcept_dt": "20260831",
-        "prices": [
-          {
-            "date": "08/18",
-            "close": 1131,
-            "change_pct": -24.45
-          },
-          {
-            "date": "08/19",
-            "close": 1050,
-            "change_pct": -7.16
-          },
-          {
-            "date": "08/20",
-            "close": 1255,
-            "change_pct": 19.52
-          },
-          {
-            "date": "08/21",
-            "close": 1242,
-            "change_pct": -1.04
-          },
-          {
-            "date": "08/24",
-            "close": 1130,
-            "change_pct": -9.02
-          },
-          {
-            "date": "08/25",
-            "close": 1222,
-            "change_pct": 8.14
-          },
-          {
-            "date": "08/26",
-            "close": 1227,
-            "change_pct": 0.41
-          },
-          {
-            "date": "08/27",
-            "close": 1388,
-            "change_pct": 13.12
-          },
-          {
-            "date": "08/28",
-            "close": 1421,
-            "change_pct": 2.38
-          },
-          {
-            "date": "08/31",
-            "close": 1355,
-            "change_pct": -4.64
-          }
-        ]
-      },
-      {
-        "corp_name": "다보링크",
-        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20260831001526",
-        "rcept_dt": "20260831",
-        "prices": [
-          {
-            "date": "08/18",
-            "close": 965,
-            "change_pct": 4.66
-          },
-          {
-            "date": "08/19",
-            "close": 939,
-            "change_pct": -2.69
-          },
-          {
-            "date": "08/20",
-            "close": 940,
-            "change_pct": 0.11
-          },
-          {
-            "date": "08/21",
-            "close": 916,
-            "change_pct": -2.55
-          },
-          {
-            "date": "08/24",
-            "close": 900,
-            "change_pct": -1.75
-          },
-          {
-            "date": "08/25",
-            "close": 881,
-            "change_pct": -2.11
-          },
-          {
-            "date": "08/26",
-            "close": 890,
-            "change_pct": 1.02
-          },
-          {
-            "date": "08/27",
-            "close": 893,
-            "change_pct": 0.34
-          },
-          {
-            "date": "08/28",
-            "close": 910,
-            "change_pct": 1.9
-          },
-          {
-            "date": "08/31",
-            "close": 913,
-            "change_pct": 0.33
-          }
-        ]
-      },
-      {
-        "corp_name": "다보링크",
+        "corp_name": "애드바이오텍",
         "report_nm": "[기재정정]주요사항보고서(전환사채권발행결정)",
-        "rcept_no": "20260831001519",
-        "rcept_dt": "20260831",
+        "rcept_no": "20260901000242",
+        "rcept_dt": "20260901",
         "prices": [
           {
             "date": "08/18",
-            "close": 965,
-            "change_pct": 4.66
+            "close": 2500,
+            "change_pct": 19.05
           },
           {
             "date": "08/19",
-            "close": 939,
-            "change_pct": -2.69
+            "close": 2575,
+            "change_pct": 3.0
           },
           {
             "date": "08/20",
-            "close": 940,
-            "change_pct": 0.11
+            "close": 2500,
+            "change_pct": -2.91
           },
           {
             "date": "08/21",
-            "close": 916,
-            "change_pct": -2.55
+            "close": 2560,
+            "change_pct": 2.4
           },
           {
             "date": "08/24",
-            "close": 900,
-            "change_pct": -1.75
+            "close": 2490,
+            "change_pct": -2.73
           },
           {
             "date": "08/25",
-            "close": 881,
-            "change_pct": -2.11
+            "close": 2460,
+            "change_pct": -1.2
           },
           {
             "date": "08/26",
-            "close": 890,
-            "change_pct": 1.02
+            "close": 2425,
+            "change_pct": -1.42
           },
           {
             "date": "08/27",
-            "close": 893,
-            "change_pct": 0.34
+            "close": 2635,
+            "change_pct": 8.66
           },
           {
             "date": "08/28",
-            "close": 910,
-            "change_pct": 1.9
+            "close": 2470,
+            "change_pct": -6.26
           },
           {
             "date": "08/31",
-            "close": 913,
-            "change_pct": 0.33
+            "close": 2510,
+            "change_pct": 1.62
           }
         ]
       },
       {
-        "corp_name": "더코디",
-        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20260831001512",
-        "rcept_dt": "20260831",
+        "corp_name": "애드바이오텍",
+        "report_nm": "[기재정정]주요사항보고서(전환사채권발행결정)",
+        "rcept_no": "20260901000238",
+        "rcept_dt": "20260901",
         "prices": [
           {
             "date": "08/18",
-            "close": 3230,
-            "change_pct": -3.87
+            "close": 2500,
+            "change_pct": 19.05
           },
           {
             "date": "08/19",
-            "close": 3090,
-            "change_pct": -4.33
+            "close": 2575,
+            "change_pct": 3.0
           },
           {
             "date": "08/20",
-            "close": 3230,
-            "change_pct": 4.53
+            "close": 2500,
+            "change_pct": -2.91
           },
           {
             "date": "08/21",
-            "close": 3075,
-            "change_pct": -4.8
+            "close": 2560,
+            "change_pct": 2.4
           },
           {
             "date": "08/24",
-            "close": 2970,
-            "change_pct": -3.41
+            "close": 2490,
+            "change_pct": -2.73
           },
           {
             "date": "08/25",
-            "close": 2860,
-            "change_pct": -3.7
+            "close": 2460,
+            "change_pct": -1.2
           },
           {
             "date": "08/26",
-            "close": 3315,
-            "change_pct": 15.91
+            "close": 2425,
+            "change_pct": -1.42
           },
           {
             "date": "08/27",
-            "close": 3590,
-            "change_pct": 8.3
+            "close": 2635,
+            "change_pct": 8.66
           },
           {
             "date": "08/28",
-            "close": 3850,
-            "change_pct": 7.24
+            "close": 2470,
+            "change_pct": -6.26
           },
           {
             "date": "08/31",
-            "close": 3870,
-            "change_pct": 0.52
-          }
-        ]
-      },
-      {
-        "corp_name": "아이텍",
-        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20260831001452",
-        "rcept_dt": "20260831",
-        "prices": [
-          {
-            "date": "08/18",
-            "close": 6980,
-            "change_pct": 2.65
-          },
-          {
-            "date": "08/19",
-            "close": 6860,
-            "change_pct": -1.72
-          },
-          {
-            "date": "08/20",
-            "close": 6970,
-            "change_pct": 1.6
-          },
-          {
-            "date": "08/21",
-            "close": 6800,
-            "change_pct": -2.44
-          },
-          {
-            "date": "08/24",
-            "close": 7200,
-            "change_pct": 5.88
-          },
-          {
-            "date": "08/25",
-            "close": 7100,
-            "change_pct": -1.39
-          },
-          {
-            "date": "08/26",
-            "close": 7150,
-            "change_pct": 0.7
-          },
-          {
-            "date": "08/27",
-            "close": 7560,
-            "change_pct": 5.73
-          },
-          {
-            "date": "08/28",
-            "close": 7060,
-            "change_pct": -6.61
-          },
-          {
-            "date": "08/31",
-            "close": 6420,
-            "change_pct": -9.07
-          }
-        ]
-      },
-      {
-        "corp_name": "더코디",
-        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20260831001471",
-        "rcept_dt": "20260831",
-        "prices": [
-          {
-            "date": "08/18",
-            "close": 3230,
-            "change_pct": -3.87
-          },
-          {
-            "date": "08/19",
-            "close": 3090,
-            "change_pct": -4.33
-          },
-          {
-            "date": "08/20",
-            "close": 3230,
-            "change_pct": 4.53
-          },
-          {
-            "date": "08/21",
-            "close": 3075,
-            "change_pct": -4.8
-          },
-          {
-            "date": "08/24",
-            "close": 2970,
-            "change_pct": -3.41
-          },
-          {
-            "date": "08/25",
-            "close": 2860,
-            "change_pct": -3.7
-          },
-          {
-            "date": "08/26",
-            "close": 3315,
-            "change_pct": 15.91
-          },
-          {
-            "date": "08/27",
-            "close": 3590,
-            "change_pct": 8.3
-          },
-          {
-            "date": "08/28",
-            "close": 3850,
-            "change_pct": 7.24
-          },
-          {
-            "date": "08/31",
-            "close": 3870,
-            "change_pct": 0.52
-          }
-        ]
-      },
-      {
-        "corp_name": "파이온엑스",
-        "report_nm": "주요사항보고서(유상증자결정)",
-        "rcept_no": "20260831001458",
-        "rcept_dt": "20260831",
-        "prices": [
-          {
-            "date": "08/18",
-            "close": 1976,
-            "change_pct": 0.61
-          },
-          {
-            "date": "08/19",
-            "close": 1935,
-            "change_pct": -2.07
-          },
-          {
-            "date": "08/20",
-            "close": 1926,
-            "change_pct": -0.47
-          },
-          {
-            "date": "08/21",
-            "close": 1780,
-            "change_pct": -7.58
-          },
-          {
-            "date": "08/24",
-            "close": 1882,
-            "change_pct": 5.73
-          },
-          {
-            "date": "08/25",
-            "close": 1777,
-            "change_pct": -5.58
-          },
-          {
-            "date": "08/26",
-            "close": 1858,
-            "change_pct": 4.56
-          },
-          {
-            "date": "08/27",
-            "close": 1800,
-            "change_pct": -3.12
-          },
-          {
-            "date": "08/28",
-            "close": 1811,
-            "change_pct": 0.61
-          },
-          {
-            "date": "08/31",
-            "close": 1809,
-            "change_pct": -0.11
+            "close": 2510,
+            "change_pct": 1.62
           }
         ]
       }
     ],
-    "good": [],
-    "earnings": []
+    "good": [
+      {
+        "corp_name": "고스트스튜디오",
+        "report_nm": "[기재정정]주요사항보고서(자기주식취득결정)",
+        "rcept_no": "20260901000254",
+        "rcept_dt": "20260901",
+        "prices": [
+          {
+            "date": "08/18",
+            "close": 8660,
+            "change_pct": -7.18
+          },
+          {
+            "date": "08/19",
+            "close": 8390,
+            "change_pct": -3.12
+          },
+          {
+            "date": "08/20",
+            "close": 8660,
+            "change_pct": 3.22
+          },
+          {
+            "date": "08/21",
+            "close": 8520,
+            "change_pct": -1.62
+          },
+          {
+            "date": "08/24",
+            "close": 8660,
+            "change_pct": 1.64
+          },
+          {
+            "date": "08/25",
+            "close": 8620,
+            "change_pct": -0.46
+          },
+          {
+            "date": "08/26",
+            "close": 8390,
+            "change_pct": -2.67
+          },
+          {
+            "date": "08/27",
+            "close": 8400,
+            "change_pct": 0.12
+          },
+          {
+            "date": "08/28",
+            "close": 9500,
+            "change_pct": 13.1
+          },
+          {
+            "date": "08/31",
+            "close": 10060,
+            "change_pct": 5.89
+          }
+        ]
+      }
+    ],
+    "earnings": [
+      {
+        "corp_name": "기아",
+        "report_nm": "영업(잠정)실적(공정공시)              ",
+        "rcept_no": "20260901800418",
+        "rcept_dt": "20260901",
+        "prices": [
+          {
+            "date": "08/18",
+            "close": 137200,
+            "change_pct": -3.18
+          },
+          {
+            "date": "08/19",
+            "close": 133000,
+            "change_pct": -3.06
+          },
+          {
+            "date": "08/20",
+            "close": 131100,
+            "change_pct": -1.43
+          },
+          {
+            "date": "08/21",
+            "close": 130900,
+            "change_pct": -0.15
+          },
+          {
+            "date": "08/24",
+            "close": 131500,
+            "change_pct": 0.46
+          },
+          {
+            "date": "08/25",
+            "close": 134900,
+            "change_pct": 2.59
+          },
+          {
+            "date": "08/26",
+            "close": 131400,
+            "change_pct": -2.59
+          },
+          {
+            "date": "08/27",
+            "close": 126100,
+            "change_pct": -4.03
+          },
+          {
+            "date": "08/28",
+            "close": 128000,
+            "change_pct": 1.51
+          },
+          {
+            "date": "08/31",
+            "close": 131000,
+            "change_pct": 2.34
+          }
+        ]
+      },
+      {
+        "corp_name": "KG모빌리티",
+        "report_nm": "영업(잠정)실적(공정공시)              ",
+        "rcept_no": "20260901800417",
+        "rcept_dt": "20260901",
+        "prices": [
+          {
+            "date": "08/18",
+            "close": 2770,
+            "change_pct": -4.97
+          },
+          {
+            "date": "08/19",
+            "close": 2710,
+            "change_pct": -2.17
+          },
+          {
+            "date": "08/20",
+            "close": 2730,
+            "change_pct": 0.74
+          },
+          {
+            "date": "08/21",
+            "close": 2660,
+            "change_pct": -2.56
+          },
+          {
+            "date": "08/24",
+            "close": 2675,
+            "change_pct": 0.56
+          },
+          {
+            "date": "08/25",
+            "close": 2695,
+            "change_pct": 0.75
+          },
+          {
+            "date": "08/26",
+            "close": 2700,
+            "change_pct": 0.19
+          },
+          {
+            "date": "08/27",
+            "close": 2685,
+            "change_pct": -0.56
+          },
+          {
+            "date": "08/28",
+            "close": 2690,
+            "change_pct": 0.19
+          },
+          {
+            "date": "08/31",
+            "close": 2700,
+            "change_pct": 0.37
+          }
+        ]
+      },
+      {
+        "corp_name": "현대자동차",
+        "report_nm": "영업(잠정)실적(공정공시)              ",
+        "rcept_no": "20260901800400",
+        "rcept_dt": "20260901",
+        "prices": []
+      },
+      {
+        "corp_name": "롯데관광개발",
+        "report_nm": "연결재무제표기준영업(잠정)실적(공정공시)              ",
+        "rcept_no": "20260901800380",
+        "rcept_dt": "20260901",
+        "prices": [
+          {
+            "date": "08/18",
+            "close": 13240,
+            "change_pct": -3.78
+          },
+          {
+            "date": "08/19",
+            "close": 13110,
+            "change_pct": -0.98
+          },
+          {
+            "date": "08/20",
+            "close": 12940,
+            "change_pct": -1.3
+          },
+          {
+            "date": "08/21",
+            "close": 12750,
+            "change_pct": -1.47
+          },
+          {
+            "date": "08/24",
+            "close": 12980,
+            "change_pct": 1.8
+          },
+          {
+            "date": "08/25",
+            "close": 13350,
+            "change_pct": 2.85
+          },
+          {
+            "date": "08/26",
+            "close": 13420,
+            "change_pct": 0.52
+          },
+          {
+            "date": "08/27",
+            "close": 12880,
+            "change_pct": -4.02
+          },
+          {
+            "date": "08/28",
+            "close": 13250,
+            "change_pct": 2.87
+          },
+          {
+            "date": "08/31",
+            "close": 13280,
+            "change_pct": 0.23
+          }
+        ]
+      }
+    ]
   }
 }
