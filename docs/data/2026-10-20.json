@@ -1,7 +1,7 @@
 {
   "date": "2026-10-20",
   "date_str": "2026년 10월 20일",
-  "time_str": "00:05",
+  "time_str": "23:36",
   "windows": {
     "1m": {
       "surge_a": [
@@ -815021,531 +815021,413 @@
   "disc": {
     "warn": [
       {
-        "corp_name": "리메드",
-        "report_nm": "[기재정정]주요사항보고서(전환사채권발행결정)",
-        "rcept_no": "20261019000366",
-        "rcept_dt": "20261019",
+        "corp_name": "금호건설",
+        "report_nm": "주요사항보고서(전환사채권발행결정)",
+        "rcept_no": "20261020000370",
+        "rcept_dt": "20261020",
         "prices": [
           {
             "date": "10/02",
-            "close": 2635,
-            "change_pct": 0.76
+            "close": 12200,
+            "change_pct": -0.49
           },
           {
             "date": "10/06",
-            "close": 2565,
-            "change_pct": -2.66
+            "close": 11820,
+            "change_pct": -3.11
           },
           {
             "date": "10/07",
-            "close": 2635,
-            "change_pct": 2.73
+            "close": 11420,
+            "change_pct": -3.38
           },
           {
             "date": "10/08",
-            "close": 2645,
-            "change_pct": 0.38
+            "close": 11140,
+            "change_pct": -2.45
           },
           {
             "date": "10/12",
-            "close": 3050,
-            "change_pct": 15.31
+            "close": 13400,
+            "change_pct": 20.29
           },
           {
             "date": "10/13",
-            "close": 2640,
-            "change_pct": -13.44
+            "close": 12150,
+            "change_pct": -9.33
           },
           {
             "date": "10/14",
-            "close": 2415,
-            "change_pct": -8.52
+            "close": 11020,
+            "change_pct": -9.3
           },
           {
             "date": "10/15",
-            "close": 2110,
-            "change_pct": -12.63
+            "close": 9930,
+            "change_pct": -9.89
           },
           {
             "date": "10/16",
-            "close": 2390,
-            "change_pct": 13.27
+            "close": 10270,
+            "change_pct": 3.42
           },
           {
             "date": "10/19",
-            "close": 2425,
-            "change_pct": 1.46
+            "close": 10260,
+            "change_pct": -0.1
           }
         ]
       },
       {
-        "corp_name": "모아데이타",
+        "corp_name": "프리티",
         "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20261019000333",
-        "rcept_dt": "20261019",
+        "rcept_no": "20261020000255",
+        "rcept_dt": "20261020",
         "prices": [
           {
             "date": "10/02",
-            "close": 214,
-            "change_pct": -3.6
+            "close": 1466,
+            "change_pct": 3.02
           },
           {
             "date": "10/06",
-            "close": 211,
-            "change_pct": -1.4
+            "close": 1459,
+            "change_pct": -0.48
           },
           {
             "date": "10/07",
-            "close": 203,
-            "change_pct": -3.79
+            "close": 1461,
+            "change_pct": 0.14
           },
           {
             "date": "10/08",
-            "close": 263,
-            "change_pct": 29.56
+            "close": 1400,
+            "change_pct": -4.18
           },
           {
             "date": "10/12",
-            "close": 221,
-            "change_pct": -15.97
+            "close": 1350,
+            "change_pct": -3.57
           },
           {
             "date": "10/13",
-            "close": 267,
-            "change_pct": 20.81
+            "close": 1200,
+            "change_pct": -11.11
           },
           {
             "date": "10/14",
-            "close": 296,
-            "change_pct": 10.86
+            "close": 1199,
+            "change_pct": -0.08
           },
           {
             "date": "10/15",
-            "close": 281,
-            "change_pct": -5.07
+            "close": 1052,
+            "change_pct": -12.26
           },
           {
             "date": "10/16",
-            "close": 239,
-            "change_pct": -14.95
+            "close": 1092,
+            "change_pct": 3.8
           },
           {
             "date": "10/19",
-            "close": 204,
-            "change_pct": -14.64
+            "close": 1082,
+            "change_pct": -0.92
           }
         ]
       },
       {
-        "corp_name": "파이온엑스",
+        "corp_name": "KS인더스트리",
         "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20261019000322",
-        "rcept_dt": "20261019",
+        "rcept_no": "20261020000377",
+        "rcept_dt": "20261020",
         "prices": [
           {
             "date": "10/02",
-            "close": 1096,
-            "change_pct": 0.0
+            "close": 1518,
+            "change_pct": 1.2
           },
           {
             "date": "10/06",
-            "close": 1096,
+            "close": 1518,
             "change_pct": 0.0
           },
           {
             "date": "10/07",
-            "close": 1096,
-            "change_pct": 0.0
+            "close": 1586,
+            "change_pct": 4.48
           },
           {
             "date": "10/08",
-            "close": 1096,
-            "change_pct": 0.0
+            "close": 1427,
+            "change_pct": -10.03
           },
           {
             "date": "10/12",
-            "close": 1096,
-            "change_pct": 0.0
-          },
-          {
-            "date": "10/13",
-            "close": 1096,
-            "change_pct": 0.0
-          },
-          {
-            "date": "10/14",
-            "close": 1096,
-            "change_pct": 0.0
-          },
-          {
-            "date": "10/15",
-            "close": 1096,
-            "change_pct": 0.0
-          },
-          {
-            "date": "10/16",
-            "close": 1096,
-            "change_pct": 0.0
-          },
-          {
-            "date": "10/19",
-            "close": 1096,
-            "change_pct": 0.0
-          }
-        ]
-      },
-      {
-        "corp_name": "모아라이프플러스",
-        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
-        "rcept_no": "20261019000262",
-        "rcept_dt": "20261019",
-        "prices": [
-          {
-            "date": "10/02",
-            "close": 479,
-            "change_pct": -0.62
-          },
-          {
-            "date": "10/06",
-            "close": 476,
+            "close": 1418,
             "change_pct": -0.63
           },
           {
-            "date": "10/07",
-            "close": 476,
-            "change_pct": 0.0
-          },
-          {
-            "date": "10/08",
-            "close": 516,
-            "change_pct": 8.4
-          },
-          {
-            "date": "10/12",
-            "close": 485,
-            "change_pct": -6.01
-          },
-          {
             "date": "10/13",
-            "close": 495,
-            "change_pct": 2.06
+            "close": 1314,
+            "change_pct": -7.33
           },
           {
             "date": "10/14",
-            "close": 496,
-            "change_pct": 0.2
+            "close": 1310,
+            "change_pct": -0.3
           },
           {
             "date": "10/15",
-            "close": 480,
-            "change_pct": -3.23
+            "close": 1206,
+            "change_pct": -7.94
           },
           {
             "date": "10/16",
-            "close": 520,
-            "change_pct": 8.33
+            "close": 1192,
+            "change_pct": -1.16
           },
           {
             "date": "10/19",
-            "close": 584,
-            "change_pct": 12.31
+            "close": 1101,
+            "change_pct": -7.63
           }
         ]
       },
       {
-        "corp_name": "한울소재과학",
-        "report_nm": "[기재정정]주요사항보고서(신주인수권부사채권발행결정)",
-        "rcept_no": "20261019000213",
-        "rcept_dt": "20261019",
+        "corp_name": "광진실업",
+        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
+        "rcept_no": "20261020000324",
+        "rcept_dt": "20261020",
         "prices": [
           {
             "date": "10/02",
-            "close": 2795,
-            "change_pct": -3.95
+            "close": 2015,
+            "change_pct": 4.95
           },
           {
             "date": "10/06",
-            "close": 2770,
-            "change_pct": -0.89
+            "close": 2300,
+            "change_pct": 14.14
           },
           {
             "date": "10/07",
-            "close": 2770,
-            "change_pct": 0.0
+            "close": 2330,
+            "change_pct": 1.3
           },
           {
             "date": "10/08",
-            "close": 2765,
-            "change_pct": -0.18
+            "close": 2345,
+            "change_pct": 0.64
           },
           {
             "date": "10/12",
-            "close": 2625,
-            "change_pct": -5.06
+            "close": 2200,
+            "change_pct": -6.18
           },
           {
             "date": "10/13",
-            "close": 2620,
-            "change_pct": -0.19
+            "close": 2130,
+            "change_pct": -3.18
           },
           {
             "date": "10/14",
-            "close": 2580,
-            "change_pct": -1.53
+            "close": 2195,
+            "change_pct": 3.05
           },
           {
             "date": "10/15",
-            "close": 2470,
-            "change_pct": -4.26
+            "close": 2185,
+            "change_pct": -0.46
           },
           {
             "date": "10/16",
-            "close": 2505,
-            "change_pct": 1.42
+            "close": 2590,
+            "change_pct": 18.54
           },
           {
             "date": "10/19",
-            "close": 2705,
-            "change_pct": 7.98
+            "close": 2605,
+            "change_pct": 0.58
+          }
+        ]
+      },
+      {
+        "corp_name": "비나텍",
+        "report_nm": "주요사항보고서(전환사채권발행결정)",
+        "rcept_no": "20261020000332",
+        "rcept_dt": "20261020",
+        "prices": [
+          {
+            "date": "10/02",
+            "close": 94800,
+            "change_pct": 1.17
+          },
+          {
+            "date": "10/06",
+            "close": 94000,
+            "change_pct": -0.84
+          },
+          {
+            "date": "10/07",
+            "close": 94700,
+            "change_pct": 0.74
+          },
+          {
+            "date": "10/08",
+            "close": 87000,
+            "change_pct": -8.13
+          },
+          {
+            "date": "10/12",
+            "close": 80800,
+            "change_pct": -7.13
+          },
+          {
+            "date": "10/13",
+            "close": 78600,
+            "change_pct": -2.72
+          },
+          {
+            "date": "10/14",
+            "close": 86000,
+            "change_pct": 9.41
+          },
+          {
+            "date": "10/15",
+            "close": 75400,
+            "change_pct": -12.33
+          },
+          {
+            "date": "10/16",
+            "close": 79500,
+            "change_pct": 5.44
+          },
+          {
+            "date": "10/19",
+            "close": 82000,
+            "change_pct": 3.14
+          }
+        ]
+      },
+      {
+        "corp_name": "광진실업",
+        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
+        "rcept_no": "20261020000320",
+        "rcept_dt": "20261020",
+        "prices": [
+          {
+            "date": "10/02",
+            "close": 2015,
+            "change_pct": 4.95
+          },
+          {
+            "date": "10/06",
+            "close": 2300,
+            "change_pct": 14.14
+          },
+          {
+            "date": "10/07",
+            "close": 2330,
+            "change_pct": 1.3
+          },
+          {
+            "date": "10/08",
+            "close": 2345,
+            "change_pct": 0.64
+          },
+          {
+            "date": "10/12",
+            "close": 2200,
+            "change_pct": -6.18
+          },
+          {
+            "date": "10/13",
+            "close": 2130,
+            "change_pct": -3.18
+          },
+          {
+            "date": "10/14",
+            "close": 2195,
+            "change_pct": 3.05
+          },
+          {
+            "date": "10/15",
+            "close": 2185,
+            "change_pct": -0.46
+          },
+          {
+            "date": "10/16",
+            "close": 2590,
+            "change_pct": 18.54
+          },
+          {
+            "date": "10/19",
+            "close": 2605,
+            "change_pct": 0.58
+          }
+        ]
+      },
+      {
+        "corp_name": "에코글로우",
+        "report_nm": "[기재정정]주요사항보고서(유상증자결정)",
+        "rcept_no": "20261020000316",
+        "rcept_dt": "20261020",
+        "prices": [
+          {
+            "date": "10/02",
+            "close": 3155,
+            "change_pct": 0.48
+          },
+          {
+            "date": "10/06",
+            "close": 3070,
+            "change_pct": -2.69
+          },
+          {
+            "date": "10/07",
+            "close": 3065,
+            "change_pct": -0.16
+          },
+          {
+            "date": "10/08",
+            "close": 3040,
+            "change_pct": -0.82
+          },
+          {
+            "date": "10/12",
+            "close": 2980,
+            "change_pct": -1.97
+          },
+          {
+            "date": "10/13",
+            "close": 2930,
+            "change_pct": -1.68
+          },
+          {
+            "date": "10/14",
+            "close": 2920,
+            "change_pct": -0.34
+          },
+          {
+            "date": "10/15",
+            "close": 2885,
+            "change_pct": -1.2
+          },
+          {
+            "date": "10/16",
+            "close": 2945,
+            "change_pct": 2.08
+          },
+          {
+            "date": "10/19",
+            "close": 2995,
+            "change_pct": 1.7
           }
         ]
       }
     ],
-    "good": [
-      {
-        "corp_name": "현대로템",
-        "report_nm": "주요사항보고서(자기주식취득결정)",
-        "rcept_no": "20261019000305",
-        "rcept_dt": "20261019",
-        "prices": [
-          {
-            "date": "10/02",
-            "close": 116500,
-            "change_pct": 3.56
-          },
-          {
-            "date": "10/06",
-            "close": 112400,
-            "change_pct": -3.52
-          },
-          {
-            "date": "10/07",
-            "close": 107900,
-            "change_pct": -4.0
-          },
-          {
-            "date": "10/08",
-            "close": 105200,
-            "change_pct": -2.5
-          },
-          {
-            "date": "10/12",
-            "close": 100000,
-            "change_pct": -4.94
-          },
-          {
-            "date": "10/13",
-            "close": 97700,
-            "change_pct": -2.3
-          },
-          {
-            "date": "10/14",
-            "close": 97300,
-            "change_pct": -0.41
-          },
-          {
-            "date": "10/15",
-            "close": 91800,
-            "change_pct": -5.65
-          },
-          {
-            "date": "10/16",
-            "close": 96900,
-            "change_pct": 5.56
-          },
-          {
-            "date": "10/19",
-            "close": 100700,
-            "change_pct": 3.92
-          }
-        ]
-      }
-    ],
-    "earnings": [
-      {
-        "corp_name": "HD한국조선해양",
-        "report_nm": "영업(잠정)실적(공정공시)(자회사의 주요경영사항)              ",
-        "rcept_no": "20261019800441",
-        "rcept_dt": "20261019",
-        "prices": [
-          {
-            "date": "10/02",
-            "close": 326000,
-            "change_pct": 0.15
-          },
-          {
-            "date": "10/06",
-            "close": 318500,
-            "change_pct": -2.3
-          },
-          {
-            "date": "10/07",
-            "close": 301500,
-            "change_pct": -5.34
-          },
-          {
-            "date": "10/08",
-            "close": 291500,
-            "change_pct": -3.32
-          },
-          {
-            "date": "10/12",
-            "close": 282000,
-            "change_pct": -3.26
-          },
-          {
-            "date": "10/13",
-            "close": 278000,
-            "change_pct": -1.42
-          },
-          {
-            "date": "10/14",
-            "close": 276000,
-            "change_pct": -0.72
-          },
-          {
-            "date": "10/15",
-            "close": 263000,
-            "change_pct": -4.71
-          },
-          {
-            "date": "10/16",
-            "close": 265000,
-            "change_pct": 0.76
-          },
-          {
-            "date": "10/19",
-            "close": 271500,
-            "change_pct": 2.45
-          }
-        ]
-      },
-      {
-        "corp_name": "HD한국조선해양",
-        "report_nm": "영업(잠정)실적(공정공시)              ",
-        "rcept_no": "20261019800444",
-        "rcept_dt": "20261019",
-        "prices": [
-          {
-            "date": "10/02",
-            "close": 326000,
-            "change_pct": 0.15
-          },
-          {
-            "date": "10/06",
-            "close": 318500,
-            "change_pct": -2.3
-          },
-          {
-            "date": "10/07",
-            "close": 301500,
-            "change_pct": -5.34
-          },
-          {
-            "date": "10/08",
-            "close": 291500,
-            "change_pct": -3.32
-          },
-          {
-            "date": "10/12",
-            "close": 282000,
-            "change_pct": -3.26
-          },
-          {
-            "date": "10/13",
-            "close": 278000,
-            "change_pct": -1.42
-          },
-          {
-            "date": "10/14",
-            "close": 276000,
-            "change_pct": -0.72
-          },
-          {
-            "date": "10/15",
-            "close": 263000,
-            "change_pct": -4.71
-          },
-          {
-            "date": "10/16",
-            "close": 265000,
-            "change_pct": 0.76
-          },
-          {
-            "date": "10/19",
-            "close": 271500,
-            "change_pct": 2.45
-          }
-        ]
-      },
-      {
-        "corp_name": "HD현대중공업",
-        "report_nm": "영업(잠정)실적(공정공시)              ",
-        "rcept_no": "20261019800435",
-        "rcept_dt": "20261019",
-        "prices": [
-          {
-            "date": "10/02",
-            "close": 426000,
-            "change_pct": -1.27
-          },
-          {
-            "date": "10/06",
-            "close": 420500,
-            "change_pct": -1.29
-          },
-          {
-            "date": "10/07",
-            "close": 400000,
-            "change_pct": -4.88
-          },
-          {
-            "date": "10/08",
-            "close": 384000,
-            "change_pct": -4.0
-          },
-          {
-            "date": "10/12",
-            "close": 365500,
-            "change_pct": -4.82
-          },
-          {
-            "date": "10/13",
-            "close": 366500,
-            "change_pct": 0.27
-          },
-          {
-            "date": "10/14",
-            "close": 369000,
-            "change_pct": 0.68
-          },
-          {
-            "date": "10/15",
-            "close": 352500,
-            "change_pct": -4.47
-          },
-          {
-            "date": "10/16",
-            "close": 351500,
-            "change_pct": -0.28
-          },
-          {
-            "date": "10/19",
-            "close": 345500,
-            "change_pct": -1.71
-          }
-        ]
-      }
-    ]
+    "good": [],
+    "earnings": []
   }
 }
